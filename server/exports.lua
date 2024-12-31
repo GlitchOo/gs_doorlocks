@@ -58,6 +58,22 @@ function DoorAPI:Door(doorid)
         return false
     end
 
+    --- Remove a job from the door access
+    --- @param name string
+    --- @return boolean
+    function self.fn.RemoveJob(name)
+        local index = U.table.indexof(self.Data.jobAccess, name)
+        if index then
+
+            table.remove(self.Data.jobAccess, index)
+            UpdateDoor(self.Data.doorid, 'jobAccess', self.Data.jobAccess)
+
+            return true
+        end
+
+        return false
+    end
+
     --- Set the character access for the door
     --- @param charAccess table
     function self.fn.SetCharAccess(charAccess)
@@ -80,6 +96,22 @@ function DoorAPI:Door(doorid)
         return false
     end
 
+    --- Remove a character from the door access
+    --- @param charId number
+    --- @return boolean
+    function self.fn.RemoveChar(charId) 
+        local index = U.table.indexof(self.Data.charAccess, charId)
+        if index then
+
+            table.remove(self.Data.charAccess, index)
+            UpdateDoor(self.Data.doorid, 'charAccess', self.Data.charAccess)
+
+            return true
+        end
+
+        return false
+    end
+
     --- Set the door to be locked on start
     --- @param bool boolean
     function self.fn.SetLockOnStart(bool)
@@ -92,6 +124,13 @@ function DoorAPI:Door(doorid)
     function self.fn.SetCanLockpick(bool)
         self.Data.canLockpick = bool
         UpdateDoor(self.Data.doorid, 'canLockpick', self.Data.canLockpick)
+    end
+
+    --- Set if the door should show a prompt
+    --- @param bool boolean
+    function self.fn.ShowUIPrompt(bool)
+        self.Data.showPrompt = bool
+        UpdateDoor(self.Data.doorid, 'showPrompt', self.Data.showPrompt)
     end
 
     --- Set if the door should show a prompt

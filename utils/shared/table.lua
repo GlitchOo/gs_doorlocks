@@ -26,5 +26,17 @@ local function contains(tbl, val)
     end
 end
 
+---Returns the index of a value in a table
+---@param tbl table
+---@param val any
+local function indexof(tbl, val)
+    for i, v in next, tbl do
+        if v == val then return i end
+    end
+
+    return false
+end
+
 table.contains = contains
+table.indexof = indexof
 
