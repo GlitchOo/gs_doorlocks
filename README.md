@@ -24,7 +24,8 @@ Supports single and double doors
   - Enable/Disable whether or not the lock can be lockpicked (with item configured)
   - Delete the door
 
-[Example Video](https://uploads.nbrp.city/projects/gs-doorlocks/example.mp4)
+[Example Video 1](https://uploads.nbrp.city/projects/gs-doorlocks/example.mp4)
+[Example Video 2](https://uploads.nbrp.city/projects/gs-doorlocks/example_2.mp4)
 
 # API
 
