@@ -1,6 +1,7 @@
 Core = exports.vorp_core:GetCore()
 Menu = exports['feather-menu'].initiate()
 Doors = {}
+DoorEnities = {}
 ClosestDoor = nil
 
 -- Setup the UI Prompts for the door system
@@ -111,7 +112,7 @@ RegisterNetEvent('gs-doorlocks:client:LockpickDoor', function(doorid, itemId)
                     TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, false, itemId)
                 else
                     if Config.Lockpick.removeOnFail then
-                        TriggerServerEvent('gs-doorlocks:server:RemoveItem', itemId)
+                        TriggerServerEvent('gs-inventory:server:RemoveItem', itemId)
                     end
                     Core.NotifyAvanced(_('lockpick_fail'), 'BLIPS', 'blip_proc_home_locked', 'COLOR_RED', 1500)
                 end
@@ -150,6 +151,8 @@ CreateThread(function()
             goto continue
         end
 
+        table.wipe(DoorEnities) -- Clear the door entities, memory performance?
+
         for doorid, data in next, Doors do
             -- Ignore anything > 50 meters. No need to check everything in existance... performance?
             local dist = #(U.Cache.Coords - data.coords)
@@ -160,26 +163,14 @@ CreateThread(function()
                         local entity = GetEntityByDoorhash(data.doors[i].hash, 0)
 
                         if entity ~= 0 then
-                            local state = Entity(entity).state
-
-                            -- If the state doesnt exist or it doesnt match the doorid realted to the hash
-                            if not state.doorid or state.doorid ~= doorid then
-                                state.doorid = doorid
-                            end
-
+                            DoorEnities[entity] = doorid
                         end
                     end
                 else
-                    local entity = GetEntityByDoorhash(data.hash, 0)
+                    local entity = GetEntityByDoorhash(data.door.hash, 0)
 
                     if entity ~= 0 then
-                        local state = Entity(entity).state
-
-                        -- If the state doesnt exist or it doesnt match the doorid realted to the hash
-                        if not state.doorid or state.doorid ~= doorid then
-                            state.doorid = doorid
-                        end
-
+                        DoorEnities[entity] = doorid
                     end
                 end
 

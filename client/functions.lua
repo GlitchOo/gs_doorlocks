@@ -51,14 +51,14 @@ end
 
 ---Checks if an entity is a door
 ---@param entity number
----@return boolean
+---@return number | boolean
 function IsDoor(entity)
 	if not entity then return false end
 
-	local doorid = Entity(entity).state.doorid
+	local doorid = DoorEnities[entity]
 
 	if doorid and Doors[doorid] then
-		return true
+		return doorid
 	end
 
 	return false
@@ -199,6 +199,57 @@ function SelectDoorThread(isDouble)
 
 	if SelectedDoor then
 		Core.NotifyAvanced(_('selected'), 'BLIPS', 'blip_proc_home_locked', 'COLOR_GREEN', 1500)
+	end
+
+	return SelectedDoor
+end
+
+---Starts the select door thread
+---@return any
+function SelectDoorIdThread()
+	local SelectedDoor = nil
+	local PromptGroup = U.Prompts:SetupPromptGroup()
+	local AddDoorPrompt = PromptGroup:RegisterPrompt(_('select_door'), Config.Keys.adddoor, false, true, false, 'click', {})
+	local CancelDoorPrompt = PromptGroup:RegisterPrompt(_('cancel'), Config.Keys.cancel, true, true, false, 'click', {})
+
+	while not IsPedDeadOrDying(U.Cache.Ped, false) do
+		Wait(5)
+		
+		PromptGroup:ShowGroup(_('doorlock'))
+
+		if CancelDoorPrompt:HasCompleted() then
+			SelectedDoor = nil
+			Core.NotifyAvanced(_('canceled'), 'BLIPS', 'blip_proc_home_locked', 'COLOR_RED', 1500)
+			break
+		end
+
+		local retval, entity = GetEntityPlayerIsFreeAimingAt(PlayerId())
+
+		if retval then
+			local isDoor = IsDoor(entity)
+
+			if isDoor then
+				AddDoorPrompt:EnabledPrompt(true)
+
+				if AddDoorPrompt:HasCompleted() then
+					local doorid = DoorEnities[entity]
+					print('Selected DoorID:', doorid)
+					SelectedDoor = doorid
+					break
+				end
+			else
+				AddDoorPrompt:EnabledPrompt(false)
+			end
+
+		else
+			AddDoorPrompt:EnabledPrompt(false)
+		end
+	end
+
+	AddDoorPrompt:DeletePrompt()
+
+	if SelectedDoor then
+		Core.NotifyAvanced(_('selected_id', SelectedDoor), 'BLIPS', 'blip_proc_home_locked', 'COLOR_GREEN', 1500)
 	end
 
 	return SelectedDoor

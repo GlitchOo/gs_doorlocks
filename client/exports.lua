@@ -16,6 +16,10 @@ exports('CreateDoor', function()
     return Citizen.Await(response)
 end)
 
+exports('GetDoorId', function()
+    return SelectDoorIdThread()
+end)
+
 --- Gets the door ID of the closest door
 --- @param dist number | nil
 --- @return number | nil

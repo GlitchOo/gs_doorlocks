@@ -16,6 +16,8 @@
     "edit": "Edit Door",
     "no_perms": "You do not have permission to do this",
     "add_door": "Add Door",
+    "select_door": "Select Door",
+    "selected_id": "Door selected with ID: %s",
     "cancel": "Cancel",
     "canceled": "Canceled selection",
     "selected": "Door(s) selected",
