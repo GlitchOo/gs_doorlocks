@@ -156,9 +156,9 @@ RegisterNetEvent('gs-doorlocks:server:ToggleDoorStatus', function(doorid, status
         DevPrint('Job Access', Job, 'Door', doorid)
     end
 
-    if not CanAccess and #door.charAccess > 0 and U.table.contains(door.charAccess, Character.charId) then
+    if not CanAccess and #door.charAccess > 0 and U.table.contains(door.charAccess, Character.charIdentifier) then
         CanAccess = true
-        DevPrint('Character Access', Character.charId, 'Door', doorid)
+        DevPrint('Character Access', Character.charIdentifier, 'Door', doorid)
     end
 
     if not CanAccess and Config.OpenAllDoors.Enabled then
