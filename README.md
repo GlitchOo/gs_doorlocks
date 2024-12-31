@@ -88,7 +88,9 @@ While this resource was built around VORP it could be modified for any framework
 
 [Vorp Inventory](https://github.com/VORPCORE/vorp_inventory-lua)
 
-Feather-Menu
+[Vorp Menu](https://github.com/VORPCORE/vorp_menu)
+
+[Vorp Inputs](https://github.com/VORPCORE/vorp_inputs-lua)
 
 Can be replaced with any skillcheck you prefer or disabled entirely
 
