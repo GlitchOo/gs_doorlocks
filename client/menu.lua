@@ -117,15 +117,15 @@ function OpenLockMenu(fresh, isExport)
             Data.isDouble = data.value
             DevPrint('Is Double:', Data.isDouble)
         end)
-
-        MainPage:RegisterElement("checkbox", {
-            label = _('show_prompt'),
-            start = Data.showPrompt
-        }, function(data)
-            Data.showPrompt = data.value
-            DevPrint('Show Prompt:', Data.showPrompt)
-        end)
     end
+
+    MainPage:RegisterElement("checkbox", {
+        label = _('show_prompt'),
+        start = Data.showPrompt
+    }, function(data)
+        Data.showPrompt = data.value
+        DevPrint('Show Prompt:', Data.showPrompt)
+    end)
 
 
     MainPage:RegisterElement('line', {
