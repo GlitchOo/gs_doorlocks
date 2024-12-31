@@ -24,8 +24,19 @@ Supports single and double doors
   - Enable/Disable whether or not the lock can be lockpicked (with item configured)
   - Delete the door
 
-[Example Video 1](https://uploads.nbrp.city/projects/gs-doorlocks/example.mp4)
-[Example Video 2](https://uploads.nbrp.city/projects/gs-doorlocks/example_2.mp4)
+/togglelock - Toggle the closest doorlock (This will allow you to open doors with hidden UIPrompts)
+
+[Create Double Door](https://uploads.nbrp.city/projects/gs-doorlocks/CreateDoubleDoor.mp4)
+
+[Create Single Door](https://uploads.nbrp.city/projects/gs-doorlocks/CreateSingleDoor.mp4)
+
+[Edit Door](https://uploads.nbrp.city/projects/gs-doorlocks/EditDoor.mp4)
+
+[UIPrompt Interactions](https://uploads.nbrp.city/projects/gs-doorlocks/PromptInteraction.mp4)
+
+[Lockpick Door](https://uploads.nbrp.city/projects/gs-doorlocks/LockpickDoor.mp4)
+
+[ToogleLock Command](https://uploads.nbrp.city/projects/gs-doorlocks/toggledoor.mp4)
 
 # API
 
