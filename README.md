@@ -31,7 +31,7 @@ Supports single and double doors
 
 ### Client Side
 
-CreateDoor | Opens the "create door" mennu and returns the door ID when completed or nil when canceled
+CreateDoor | Opens the "create door" menu and returns the door ID when completed or nil when canceled
 ```
 exports.gs_doorlocks:CreateDoor() 
 ```
