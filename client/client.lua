@@ -166,11 +166,18 @@ CreateThread(function()
                             DoorEnities[entity] = doorid
                         end
                     end
+
+                    -- Find the objects center point to place the sprite (if enabled) (Calculated server-side)
+                    data.center = vec3(data.coords.x, data.coords.y, data.coords.z + 1.0)
                 else
                     local entity = GetEntityByDoorhash(data.door.hash, 0)
 
                     if entity ~= 0 then
                         DoorEnities[entity] = doorid
+
+                        -- Find the objects center point to place the sprite (if enabled)
+                        local calc = CalculateModelCenterPoint(entity, data.door.model)
+                        data.center = vec3(calc.x, calc.y, data.coords.z + 1.0)
                     end
                 end
 
@@ -207,7 +214,9 @@ CreateThread(function()
                 local isJob = (#data.jobAccess == 0 and true or U.table.contains(data.jobAccess, LocalPlayer.state.Character.Job))
                 local isChar = (#data.charAccess == 0 and true or U.table.contains(data.charAccess, LocalPlayer.state.Character.CharId))
                 
-                
+                if Config.EnableDrawSprite then
+                    DrawLock(data.center, data.locked)
+                end
 
                 if data.locked then
                     LockGroup:ShowGroup(_('locked_doorlock'))

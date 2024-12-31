@@ -49,6 +49,53 @@ function LockAnimation(coords)
 	SetModelAsNoLongerNeeded(model)
 end
 
+--- Draw a sprite on the screen
+--- @param coords vector3
+--- @param locked boolean
+function DrawLock(coords, locked)
+	local onScreen, screenX, screenY = GetScreenCoordFromWorldCoord(coords.x, coords.y, coords.z)
+
+	if not onScreen then return end
+
+	if locked then
+		DrawSprite("generic_textures", "lock", screenX, screenY + 0.0125, 0.025, 0.04, 0.1, 100, 1, 1, 200)
+	else
+		DrawSprite("generic_textures", "lock", screenX, screenY + 0.0125, 0.025, 0.04, 0.1, 67, 160, 71, 200)
+	end
+end
+
+--- Calculates the center point of the model
+--- @param entity number
+--- @param model number | nil
+--- @return vector2
+function CalculateModelCenterPoint(entity, model)
+	-- If the model is not provided or is invalid, get the model from the entity
+	if not model or not IsModelValid(model) then
+		model = GetEntityModel(entity)
+	end
+
+	local minimum, maximum = GetModelDimensions(model)
+                            
+	local corners = {}
+	-- Get the offset of 8 corners of the object in 3D space
+	corners[1] = GetOffsetFromEntityInWorldCoords(entity, minimum.x, minimum.y, minimum.z).xy
+	corners[2] = GetOffsetFromEntityInWorldCoords(entity, minimum.x, minimum.y, maximum.z).xy
+	corners[3] = GetOffsetFromEntityInWorldCoords(entity, minimum.x, maximum.y, maximum.z).xy
+	corners[4] = GetOffsetFromEntityInWorldCoords(entity, minimum.x, maximum.y, minimum.z).xy
+	corners[5] = GetOffsetFromEntityInWorldCoords(entity, maximum.x, minimum.y, minimum.z).xy
+	corners[6] = GetOffsetFromEntityInWorldCoords(entity, maximum.x, minimum.y, maximum.z).xy
+	corners[7] = GetOffsetFromEntityInWorldCoords(entity, maximum.x, maximum.y, maximum.z).xy
+	corners[8] = GetOffsetFromEntityInWorldCoords(entity, maximum.x, maximum.y, minimum.z).xy
+
+	local center = vec2(0, 0)
+	
+	for i = 1, 8 do
+		center += corners[i]
+	end
+
+	return center / 8
+end
+
 ---Checks if an entity is a door
 ---@param entity number
 ---@return number | boolean

@@ -3,7 +3,9 @@ Config = {
 
     Locale = 'en', -- Locale
 
-    DoorDistance = 1.5, -- Distance to interact with doors
+    DoorDistance = 2.0, -- Distance to interact with doors
+
+    EnableDrawSprite = true, -- Enable/Disable door sprites (Hidden when UIPrompt is hidden)
 
     Lockpick = {
         minigame = true, -- Enable/Disable lockpicking minigame client/functions.lua > LockpickGame()
