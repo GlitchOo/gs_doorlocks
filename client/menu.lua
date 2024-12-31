@@ -11,24 +11,6 @@ local Data = {
     door = {},
 }
 
-local LockMenu = Menu:RegisterMenu('gs-doorlocks:menu', {
-    top = '20%',
-    left = '20%',
-    ['720width'] = '500px',
-    ['1080width'] = '600px',
-    ['2kwidth'] = '700px',
-    ['4kwidth'] = '900px',
-    style = {},
-    font = {},
-    contentslot = {
-        style = {
-            ['height'] = '400px',
-            ['min-height'] = '400px'
-        }
-    },
-    draggable = true,
-}, {})
-
 --- Resets the global data table
 function ResetData()
     Data = {
@@ -43,408 +25,440 @@ function ResetData()
     }
 end
 
+function MainMenuDescription(label)
+    return ([[
+        <div style="padding: 2px;">
+            <p>%s</p>
+        </div>
+
+        <div style="padding: 2px;">
+            <table style="width: 100%%; color: white; margin-left: 5%%; margin-right: 10%%">
+                <tr>
+                    <th style='text-align: left;'>%s</th>
+                    <td style='text-align: center;'>%s</td>
+                </tr>
+                <tr>
+                    <th style='text-align: left;'>%s</th>
+                    <td style='text-align: center;'>%s</td>
+                </tr>
+                <tr>
+                    <th style='text-align: left;'>%s</th>
+                    <td style='text-align: center;'>%s</td>
+                </tr>
+                <tr>
+                    <th style='text-align: left;'>%s</th>
+                    <td style='text-align: center;'>%s</td> 
+                </tr>
+                <tr>
+                    <th style='text-align: left;'>%s</th>
+                    <td style='text-align: center;'>%s</td>
+                </tr>
+                <tr>
+                    <th style='text-align: left;'>%s</th>
+                    <td style='text-align: center;'>%s</td>
+                </tr>
+                <tr>
+                    <th style='text-align: left;'>%s</th>
+                    <td style='text-align: center;'>%s</td>
+                </tr>
+            </table>
+        </div>
+    ]]):format(
+        label, 
+        _('doorid'), Data.doorid or _('none'),
+        _('door_name'), Data.name, 
+        _('locked_on_start'), Data.lockedOnStart and _('yes') or _('no'),
+        _('lockpickable'), Data.canLockpick and _('yes') or _('no'),
+        _('show_prompt'), Data.showPrompt and _('yes') or _('no'),
+        _('lockperms'), #Data.charAccess > 0 and table.concat(Data.charAccess, ', ') or _('none'),
+        _('job_lockperms'), #Data.jobAccess > 0 and table.concat(Data.jobAccess, ', ') or _('none')
+    )
+end
+
 --- Opens the doorlock menu
---- @param fresh table | boolean
---- @param isExport boolean
+--- @param fresh table | boolean | nil
+--- @param isExport boolean | nil
 function OpenLockMenu(fresh, isExport)
-    LockMenu:Close()
+    MenuData.CloseAll()
 
     if type(fresh) == 'table' then
         Editing = true
         Data = fresh
     elseif fresh == true then
         Editing = false
-        IsExport = isExport
+        IsExport = isExport or false
         ResetData()
     end
 
-    local MainPage = LockMenu:RegisterPage('main:page')
+    MenuData.CloseAll()
 
-    MainPage:RegisterElement('header', {
-        value = _('new_edit'),
-        slot = "header",
-        style = {}
-    })
+    local CustomLabel = '%s <span style="float: right; position: relative; right: 5vh; top: 3px;"><i class="%s"></i></span>'
+    local Check = 'fas fa-square-check'
+    local Uncheck = 'fas fa-square'
 
-    MainPage:RegisterElement('line', {
-        slot = "header",
-    })
-
-    MainPage:RegisterElement('input', {
-        label = _('name'),
-        placeholder = _('door_name'),
-        persist = true,
-        value = Data.name
-    }, function(data)
-        Data.name = data.value
-    end)
-
-    MainPage:RegisterElement('button', {
-        label = _('lockperms'),
-        style = {}
-    }, function()
-        PermissionsMenu()
-    end)
-
-    MainPage:RegisterElement('button', {
-        label = _('job_lockperms'),
-        style = {}
-    }, function()
-        PermissionsJobMenu()
-    end)
-
-    MainPage:RegisterElement("checkbox", {
-        label = _('locked_on_start'),
-        start = Data.lockedOnStart
-    }, function(data)
-        Data.lockedOnStart = data.value
-        DevPrint('Locked On Start:', Data.lockedOnStart)
-    end)
-
-    MainPage:RegisterElement("checkbox", {
-        label = _('lockpickable'),
-        start = Data.canLockpick
-    }, function(data)
-        Data.canLockpick = data.value
-        DevPrint('Can Lockpick:', Data.canLockpick)
-    end)
-
-    if not Editing then
-        MainPage:RegisterElement("checkbox", {
-            label = _('is_double'),
-            start = Data.isDouble
-        }, function(data)
-            Data.isDouble = data.value
-            DevPrint('Is Double:', Data.isDouble)
-        end)
-    end
-
-    MainPage:RegisterElement("checkbox", {
-        label = _('show_prompt'),
-        start = Data.showPrompt
-    }, function(data)
-        Data.showPrompt = data.value
-        DevPrint('Show Prompt:', Data.showPrompt)
-    end)
-
-
-    MainPage:RegisterElement('line', {
-        slot = "footer",
-    })
-    
-    if not Editing then
-        MainPage:RegisterElement('button', {
-            label = _('select_door_save'),
-            slot = "footer",
-            style = {}
-        }, function()
-            SelectionActive = true
-
-            LockMenu:Close()
-
-            Data.door = SelectDoorThread(Data.isDouble) or {}
-
-            if next(Data.door) then
-                DevPrint('Saving Data', json.encode(Data, {indent = true}))
-                TriggerServerEvent('gs-doorlocks:server:CreateDoor', Data, IsExport)
-                ResetData()
-            else
-                DevPrint('No Door Selected')
-                OpenLockMenu()
-            end
-        end)
-    else
-        MainPage:RegisterElement('button', {
-            label = _('update_door'),
-            slot = "footer",
-            style = {}
-        }, function()
-            LockMenu:Close()
-            DevPrint('Updating Data', json.encode(Data, {indent = true}))
-            TriggerServerEvent('gs-doorlocks:server:UpdateDoor', Data)
-            ResetData()
-        end)
-
-        MainPage:RegisterElement('button', {
-            label = _('delete_door'),
-            slot = "footer",
-            style = {
-                ['background-color'] = 'red'
+    MenuElements = {
+        {
+            labelText = _('door_name'),
+            label = _('door_name'),
+            value = "name",
+            descText = _('door_name_desc'),
+            desc = MainMenuDescription(_('door_name_desc')),
+            input = {
+                type = "enableinput",
+                inputType = "input",
+                button = _('confirm'),
+                style = "block",
+                attributes = {
+                    type = "text",
+                    inputHeader = _('door_name_desc'),
+                    value = Data.name,
+                    pattern = ".*",
+                    style = "border-radius: 10px; background-color: ; border:none;"
+                }
             }
-        }, function()
-            LockMenu:Close()
-            DevPrint('Deleting Data', json.encode(Data, {indent = true}))
-            TriggerServerEvent('gs-doorlocks:server:DeleteDoor', Data.doorid)
-            ResetData()
-        end)
+        },
+        {
+            labelText = _('lockperms'),
+            label = _('lockperms'),
+            value = "charAccess",
+            descText = _('permission_desc'),
+            menu = "Perms",
+            desc = MainMenuDescription(_('permission_desc'))
+        },
+        {
+            labelText = _('job_lockperms'),
+            label = _('job_lockperms'),
+            value = "jobAccess",
+            descText = _('job_permission_desc'),
+            menu = "JobPerms",
+            desc = MainMenuDescription(_('job_permission_desc'))
+        },
+        {
+            labelText = _('locked_on_start'),
+            label = CustomLabel:format(_('locked_on_start'), (Data.lockedOnStart and Check or Uncheck)),
+            value = "lockedOnStart",
+            descText = _('locked_on_start_desc'),
+            toggle = true,
+            desc = MainMenuDescription(_('locked_on_start_desc'))
+        },
+        {
+            labelText = _('lockpickable'),
+            label = CustomLabel:format(_('lockpickable'), (Data.canLockpick and Check or Uncheck)),
+            value = "canLockpick",
+            descText = _('lockpickable_desc'),
+            toggle = true,
+            desc = MainMenuDescription(_('lockpickable_desc'))
+        },
+        {
+            labelText = _('show_prompt'),
+            label = CustomLabel:format(_('show_prompt'), (Data.showPrompt and Check or Uncheck)),
+            value = "showPrompt",
+            toggle = true,
+            descText = _('show_prompt_desc'),
+            desc = MainMenuDescription(_('show_prompt_desc'))
+        }
+    }
+
+    if not Editing then
+        table.insert(MenuElements, {
+            labelText = _('is_double'),
+            label = CustomLabel:format(_('is_double'), (Data.isDouble and Check or Uncheck)),
+            value = "isDouble",
+            descText = _('is_double_desc'),
+            toggle = true,
+            desc = MainMenuDescription(_('is_double_desc'))
+        })
+
+        table.insert(MenuElements, {
+            labelText = _('select_door_save'),
+            label = _('select_door_save'),
+            value = "SetupDoor",
+            descText = _('select_door_save_desc'),
+            desc = MainMenuDescription(_('select_door_save_desc'))
+        })
+    else
+        table.insert(MenuElements, {
+            labelText = _('update_door'),
+            label = _('update_door'),
+            value = "save",
+            descText = _('update_door_desc'),
+            desc = MainMenuDescription(_('update_door_desc'))
+        })
+
+        table.insert(MenuElements, {
+            labelText = _('delete_door'),
+            label = _('delete_door'),
+            value = "delete",
+            descText = _('delete_door_desc'),
+            desc = MainMenuDescription(_('delete_door_desc')),
+            confirm = {
+                type = "enableinput",
+                inputType = "input",
+                button = _('confirm'),
+                style = "block",
+                attributes = {
+                    type = "text",
+                    inputHeader  = _('delete_door_confirm', Config.EditDoor.DeleteConfirm),
+                    pattern = ".*",
+                    style = "border-radius: 10px; background-color: ; border:none;"
+                }
+            }
+        })
     end
 
-    MainPage:RegisterElement('button', {
-        label = _('cancel'),
-        slot = "footer",
-        style = {
-            ['background-color'] = 'red'
-        }
-    }, function()
-        LockMenu:Close()
-        ResetData()
-    end)
+    MenuData.Open("default",GetCurrentResourceName(),"OpenMenu",
+        {
+            title = _('doorlock'), 
+            subtext = _('new_edit'),
+            align = "align",
+            elements = MenuElements,
+            itemHeight = "2vh",
+        },
 
-    MainPage:RegisterElement('line', {
-        slot = "footer",
-    })
+        function(data, menu)
+            if (data.current == "backup") then
+                return  _G[data.trigger](any,any)
+            end
+            
+            -- Input Values 
+            if data.current.input then
+                local result = exports.vorp_inputs:advancedInput(data.current.input)
+                if result and result ~= '' then
 
-    LockMenu:Open({
-        startupPage = MainPage
-    })
+                    Data[data.current.value] = result
+
+                    for k, v in next, data.elements do
+                        menu.setElement(k, "desc", MainMenuDescription(v.descText))
+                    end
+
+                    menu.refresh()
+                end
+            end
+
+            -- Toggle Values
+            if data.current.toggle then
+                Data[data.current.value] = not Data[data.current.value]
+
+                for k, v in next, data.elements do
+                    if v.toggle then
+                        menu.setElement(k, "label", CustomLabel:format(v.labelText, (Data[v.value] and Check or Uncheck)))
+                    end
+                    menu.setElement(k, "desc", MainMenuDescription(v.descText))
+                end
+
+                menu.refresh()
+            end
+
+            if data.current.menu then
+                return _G[data.current.menu]()
+            end
+
+            if data.current.value == 'SetupDoor' then
+                menu.close()
+
+                SelectionActive = true
+
+                Data.door = SelectDoorThread(Data.isDouble) or {}
+
+                if next(Data.door) then
+                    DevPrint('Saving Data', json.encode(Data, {indent = true}))
+                    TriggerServerEvent('gs-doorlocks:server:CreateDoor', Data, IsExport)
+                    ResetData()
+                else
+                    DevPrint('No Door Selected')
+                    OpenLockMenu()
+                end
+            end
+
+            if data.current.value == 'save' then
+                menu.close()
+                DevPrint('Updating Data', json.encode(Data, {indent = true}))
+                TriggerServerEvent('gs-doorlocks:server:UpdateDoor', Data)
+                ResetData()
+            end
+
+            if data.current.value == 'delete' then
+                -- Confirm Input to prevent any accidental deletions
+
+                local result = exports.vorp_inputs:advancedInput(data.current.confirm)
+                if result == Config.EditDoor.DeleteConfirm then
+                    menu.close()
+                    DevPrint('Deleting Data', json.encode(Data, {indent = true}))
+                    TriggerServerEvent('gs-doorlocks:server:DeleteDoor', Data.doorid)
+                    ResetData()
+                end
+            end
+            
+        end,function(data, menu)
+            menu.close()
+        end
+    )
 end
 
-function PermissionsMenu()
-    local PermsPage = LockMenu:RegisterPage('perms:page')
 
-    PermsPage:RegisterElement('header', {
-        value = _('lockperms'),
-        slot = "header",
-        style = {}
-    })
+function Perms()
+    MenuData.CloseAll()
 
-    PermsPage:RegisterElement('line', {
-        slot = "header",
-    })
+    local CustomLabel = '%s <span style="float: right; position: relative; right: 5vh; top: 3px; color: red;"><i class="fas fa-trash"></i></span>'
+
+    local MenuElements = {}
 
     for k, v in next, Data.charAccess do
-        PermsPage:RegisterElement('button', {
-            label = v,
-        }, function()
-            DevPrint('Removing Permission:', v)
-            table.remove(Data.charAccess, k)
-            PermissionsMenu()
-        end)
+        table.insert(MenuElements, {
+            label = CustomLabel:format(v),
+            value = 'remove',
+            index = k,
+            desc = ('remove_access'):format(v),
+        })
     end
 
-
-    PermsPage:RegisterElement('line', {
-        slot = "footer",
-    })
-
-    PermsPage:RegisterElement('button', {
-        label = _('clear'),
-        slot = "footer",
-        style = {
-            ['background-color'] = 'red'
+    table.insert(MenuElements, {
+        label = _('add'),
+        value = 'add',
+        desc = _('add_perm'),
+        input = {
+            type = "enableinput",
+            inputType = "input",
+            placeholder = "0",
+            button = _('confirm'),
+            style = "block",
+            attributes = {
+                type = "number",
+                inputHeader = _('permission'),
+                pattern = "[0-9]",
+                style = "border-radius: 10px; background-color: ; border:none;"
+            }
         }
-    }, function()
-        Data.charAccess = {}
-        PermissionsMenu()
-    end)
-
-    PermsPage:RegisterElement('button', {
-        label = _('add'),
-        slot = "footer",
-        style = {}
-    }, function()
-        OpenAddPermMenu()
-    end)
-
-    PermsPage:RegisterElement('button', {
-        label = _('return'),
-        slot = "footer",
-        style = {}
-    }, function()
-        OpenLockMenu()
-    end)
-
-    PermsPage:RegisterElement('line', {
-        slot = "footer",
     })
 
-    LockMenu:Open({
-        startupPage = PermsPage
-    })
-end
-
-function OpenAddPermMenu()
-    local AddPermPage = LockMenu:RegisterPage('addperm:page')
-
-    local perm = 0
-
-    AddPermPage:RegisterElement('header', {
-        value = _('add_perm'),
-        slot = "header",
-        style = {}
+    table.insert(MenuElements, {
+        label = _('clear'),
+        value = 'clear',
+        desc = _('clear_desc'),
     })
 
-    AddPermPage:RegisterElement('line', {
-        slot = "header",
-    })
+    MenuData.Open("default",GetCurrentResourceName(),"OpenPermsMenu",
+        {
+            title = _('lockperms'),
+            subtext = _('add_perm'),
+            align = "align",
+            elements = MenuElements,
+            itemHeight = "2vh",
+            lastmenu = "OpenLockMenu",
+        },
 
-    AddPermPage:RegisterElement('input', {
-        label = _('permission'),
-        placeholder = _('permission_desc'),
-        persist = true,
-    }, function(data)
-        perm = tonumber(data.value)
-    end)
+        function(data, menu)
+            if (data.current == "backup") then 
+                return _G[data.trigger]()
+            end
 
-    AddPermPage:RegisterElement('line', {
-        slot = "footer",
-    })
+            if data.current.value == 'clear' then
+                Data.charAccess = {}
+                Perms()
+            end
 
-    AddPermPage:RegisterElement('button', {
-        label = _('add'),
-        slot = "footer",
-        style = {}
-    }, function()
-        if perm and perm ~= 0 then
-            DevPrint('Adding Permission:', perm)
-            table.insert(Data.charAccess, perm)
-        else
-            DevPrint('No Permission Entered')
+            if data.current.input then
+                local result = exports.vorp_inputs:advancedInput(data.current.input)
+                result = tonumber(result)
+                if result and result ~= 0 then
+                    table.insert(Data.charAccess, result)
+                    Perms()
+                end
+            end
+
+            if data.current.value == 'remove' then
+                table.remove(Data.charAccess, data.current.index)
+                Perms()
+            end
+            
+        end,function(data, menu)
+            OpenLockMenu()
         end
-
-        PermissionsMenu()
-    end)
-
-    AddPermPage:RegisterElement('button', {
-        label = _('cancel'),
-        slot = "footer",
-        style = {}
-    }, function()
-        PermissionsMenu()
-    end)
-
-    AddPermPage:RegisterElement('line', {
-        slot = "footer",
-    })
-
-    LockMenu:Open({
-        startupPage = AddPermPage
-    })
+    )
 end
 
-function PermissionsJobMenu()
-    local PermsPage = LockMenu:RegisterPage('jobperms:page')
+function JobPerms()
+    MenuData.CloseAll()
 
-    PermsPage:RegisterElement('header', {
-        value = _('job_lockperms'),
-        slot = "header",
-        style = {}
-    })
+    local CustomLabel = '%s <span style="float: right; position: relative; right: 5vh; top: 3px; color: red;"><i class="fas fa-trash"></i></span>'
 
-    PermsPage:RegisterElement('line', {
-        slot = "header",
-    })
+    local MenuElements = {}
 
     for k, v in next, Data.jobAccess do
-        PermsPage:RegisterElement('button', {
-            label = v,
-        }, function()
-            DevPrint('Removing Permission:', v)
-            table.remove(Data.jobAccess, k)
-            PermissionsJobMenu()
-        end)
+        table.insert(MenuElements, {
+            label = CustomLabel:format(v),
+            value = 'remove',
+            index = k,
+            desc = ('remove_access'):format(v),
+        })
     end
 
-    PermsPage:RegisterElement('line', {
-        slot = "footer",
-    })
-
-    PermsPage:RegisterElement('button', {
-        label = _('clear'),
-        slot = "footer",
-        style = {
-            ['background-color'] = 'red'
+    table.insert(MenuElements, {
+        label = _('add'),
+        value = 'add',
+        desc = _('add_job_perm'),
+        input = {
+            type = "enableinput",
+            inputType = "input",
+            placeholder = "sheriff",
+            button = _('confirm'),
+            style = "block",
+            attributes = {
+                type = "text",
+                inputHeader = _('job_permission'),
+                pattern = ".*",
+                style = "border-radius: 10px; background-color: ; border:none;"
+            }
         }
-    }, function()
-        Data.jobAccess = {}
-        PermissionsMenu()
-    end)
-
-    PermsPage:RegisterElement('button', {
-        label = _('add'),
-        slot = "footer",
-        style = {}
-    }, function()
-        OpenAddJobPermMenu()
-    end)
-
-    PermsPage:RegisterElement('button', {
-        label = _('return'),
-        slot = "footer",
-        style = {}
-    }, function()
-        OpenLockMenu()
-    end)
-
-    PermsPage:RegisterElement('line', {
-        slot = "footer",
     })
 
-    LockMenu:Open({
-        startupPage = PermsPage
-    })
-end
-
-function OpenAddJobPermMenu()
-    local AddPermPage = LockMenu:RegisterPage('addjobperm:page')
-
-    local perm = ''
-
-    AddPermPage:RegisterElement('header', {
-        value = _('add_job_perm'),
-        slot = "header",
-        style = {}
+    table.insert(MenuElements, {
+        label = _('clear'),
+        value = 'clear',
+        desc = _('clear_desc'),
     })
 
-    AddPermPage:RegisterElement('line', {
-        slot = "header",
-    })
+    MenuData.Open("default",GetCurrentResourceName(),"OpenJobPermsMenu",
+        {
+            title = _('job_lockperms'),
+            subtext = _('add_job_perm'),
+            align = "align",
+            elements = MenuElements,
+            itemHeight = "2vh",
+            lastmenu = "OpenLockMenu",
+        },
 
-    AddPermPage:RegisterElement('input', {
-        label = _('job_permission'),
-        placeholder = _('job_permission_desc'),
-        persist = true,
-    }, function(data)
-        perm = data.value
-    end)
+        function(data, menu)
+            if (data.current == "backup") then 
+                return _G[data.trigger]()
+            end
 
-    AddPermPage:RegisterElement('line', {
-        slot = "footer",
-    })
+            if data.current.value == 'clear' then
+                Data.jobAccess = {}
+                JobPerms()
+            end
 
-    AddPermPage:RegisterElement('button', {
-        label = _('add'),
-        slot = "footer",
-        style = {}
-    }, function()
-        if perm ~= '' then
-            DevPrint('Adding Permission:', perm)
-            table.insert(Data.jobAccess, perm)
-        else
-            DevPrint('No Permission Entered')
+            if data.current.input then
+                local result = exports.vorp_inputs:advancedInput(data.current.input)
+                if result and result ~= '' then
+                    table.insert(Data.jobAccess, result)
+                    JobPerms()
+                end
+            end
+
+            if data.current.value == 'remove' then
+                table.remove(Data.jobAccess, data.current.index)
+                JobPerms()
+            end
+            
+        end,function(data, menu)
+            OpenLockMenu()
         end
-
-        PermissionsJobMenu()
-    end)
-
-    AddPermPage:RegisterElement('button', {
-        label = _('cancel'),
-        slot = "footer",
-        style = {}
-    }, function()
-        PermissionsJobMenu()
-    end)
-
-    AddPermPage:RegisterElement('line', {
-        slot = "footer",
-    })
-
-    LockMenu:Open({
-        startupPage = AddPermPage
-    })
+    )
 end
+
 
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= U.Cache.Resource then return end
-    LockMenu:Close()
+    MenuData.CloseAll()
 end)

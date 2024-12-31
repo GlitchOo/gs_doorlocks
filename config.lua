@@ -36,6 +36,7 @@ Config = {
         Command = 'editdoor', -- Command to edit a door  (e.g. /editdoor)
         Permission = 'doorlocks.edit', -- Permission to edit a door
         Group = 'admin', -- Group to edit a door (VORP)
+        DeleteConfirm = 'delete', -- Confirmation to delete a door
     },
     
     Keys = {

@@ -1,5 +1,5 @@
 Core = exports.vorp_core:GetCore()
-Menu = exports['feather-menu'].initiate()
+MenuData = exports.vorp_menu:GetMenuData()
 Doors = {}
 DoorEnities = {}
 ClosestDoor = nil
