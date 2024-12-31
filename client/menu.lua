@@ -109,21 +109,23 @@ function OpenLockMenu(fresh, isExport)
         DevPrint('Can Lockpick:', Data.canLockpick)
     end)
 
-    MainPage:RegisterElement("checkbox", {
-        label = _('is_double'),
-        start = Data.isDouble
-    }, function(data)
-        Data.isDouble = data.value
-        DevPrint('Is Double:', Data.isDouble)
-    end)
+    if not Editing then
+        MainPage:RegisterElement("checkbox", {
+            label = _('is_double'),
+            start = Data.isDouble
+        }, function(data)
+            Data.isDouble = data.value
+            DevPrint('Is Double:', Data.isDouble)
+        end)
 
-    MainPage:RegisterElement("checkbox", {
-        label = _('show_prompt'),
-        start = Data.showPrompt
-    }, function(data)
-        Data.showPrompt = data.value
-        DevPrint('Show Prompt:', Data.showPrompt)
-    end)
+        MainPage:RegisterElement("checkbox", {
+            label = _('show_prompt'),
+            start = Data.showPrompt
+        }, function(data)
+            Data.showPrompt = data.value
+            DevPrint('Show Prompt:', Data.showPrompt)
+        end)
+    end
 
 
     MainPage:RegisterElement('line', {
