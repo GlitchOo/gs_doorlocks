@@ -25,6 +25,8 @@ Supports single and double doors
   - Enable/Disable whether or not the lock can be lockpicked (with item configured)
   - Delete the door
 
+[Example Video](https://uploads.nbrp.city/projects/gs-doorlocks/example.mp4)
+
 # API
 
 ### Client Side
@@ -91,5 +93,4 @@ While this resource was built around VORP it could be modified for any framework
 Can be replaced with any skillcheck you prefer or disabled entirely
 
 [lockpick by outsider31000](https://github.com/outsider31000/lockpick)
-
 
