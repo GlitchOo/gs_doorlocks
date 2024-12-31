@@ -11,6 +11,9 @@ CreateThread(function()
         ) ENGINE=InnoDB AUTO_INCREMENT=0;
     ]])
 
+    -- Remove empty doors
+    MySQL.update.await('DELETE FROM `gs_doorlocks` WHERE data = \'[]\'')
+
     local doors = MySQL.query.await('SELECT * FROM `gs_doorlocks`')
 
     for i = 1, #doors do
