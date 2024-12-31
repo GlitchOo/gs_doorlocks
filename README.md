@@ -2,7 +2,6 @@
 
 An easy feature packed doorlock system for VORP/RedM.
 No hashlist involved, as long as the door works within game, this resource will get that information for you upon creating the door.
-Client side statebags are used (non networked) to verify doors and prevent duplicate doors from getting created by accident. 
 
 Supports single and double doors
 
