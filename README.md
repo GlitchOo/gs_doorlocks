@@ -109,6 +109,18 @@ Door.fn.RemoveChar(characterIdenntifer:int) -- Remove a character from existing 
 ```
   
 
+# Events 
+
+
+## Server-Side 
+
+```
+AddEventHandler('gs-doorlocks:Ready', function()
+    -- Locks are loaded.. do some logic
+end)
+```
+
+
 All updates and changes are updated too all clients in real time (no need to relog)
 
 # Dependencies
