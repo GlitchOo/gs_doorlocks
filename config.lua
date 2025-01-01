@@ -15,7 +15,9 @@ Config = {
     },
 
 
-    UnlockCommand = 'togglelock', -- Command to unlock a door (e.g. /unlock) allows doors to be unlocked when UIPrompt is hidden   
+    UnlockCommand = 'togglelock', -- Command to unlock a door (e.g. /unlock) allows doors to be unlocked when UIPrompt is hidden 
+    
+    UseIsControlJustReleased = false, -- Enable/Disable IsControlJustReleased for door interaction instead of UIPrompts
 
     OpenAllDoors = { -- Gives the ability to open all doors to a group or permission (Usually for staff only)
         Enabled = true, -- Enable/Disable opening all doors

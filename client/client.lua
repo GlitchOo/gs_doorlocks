@@ -219,8 +219,6 @@ CreateThread(function()
                 end
 
                 if data.locked then
-                    LockGroup:ShowGroup(_('locked_doorlock'))
-
                     if isJob and isChar then
                         enableLock = true
                     end
@@ -228,34 +226,60 @@ CreateThread(function()
                     if data.canLockpick then
                         enableLockpick = true
                     end
-
                     
-                    DoorlockPrompt:EnabledPrompt(enableLock)
-                    LockpickPrompt:EnabledPrompt(enableLockpick)
+                    -- Do not show prompts if UseIsControlJustReleased is enabled
+                    if not Config.UseIsControlJustReleased then
 
-                    DoorUnlockPrompt:EnabledPrompt(enableUnlock)
+                        LockGroup:ShowGroup(_('locked_doorlock'))
+                        DoorlockPrompt:EnabledPrompt(enableLock)
+                        LockpickPrompt:EnabledPrompt(enableLockpick)
 
-                    if enableUnlock and DoorUnlockPrompt:HasCompleted() then
-                        DevPrint('Unlocking door', data.doorid)
-                        LockAnimation(data.coords)
-                        TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, false)
+                        DoorUnlockPrompt:EnabledPrompt(enableUnlock)
+
+                        if enableUnlock and DoorUnlockPrompt:HasCompleted() then
+                            DevPrint('Unlocking door', data.doorid)
+                            LockAnimation(data.coords)
+                            TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, false)
+                        end
+                        
+                        if enableLockpick and LockpickPrompt:HasCompleted() then
+                            DevPrint('Lockpicking door', data.doorid)
+                            TriggerServerEvent('gs-doorlocks:server:LockpickDoor', data.doorid)
+                        end
+
+                    else
+                        if enableUnlock and IsControlJustReleased(0, Config.Keys.lock) then
+                            DevPrint('Unlocking door', data.doorid)
+                            LockAnimation(data.coords)
+                            TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, false)
+                        end
+
+                        if enableLockpick and IsControlJustReleased(0, Config.Keys.lockpick) then
+                            DevPrint('Lockpicking door', data.doorid)
+                            TriggerServerEvent('gs-doorlocks:server:LockpickDoor', data.doorid)
+                        end
                     end
-                    
-                    if enableLockpick and LockpickPrompt:HasCompleted() then
-                        DevPrint('Lockpicking door', data.doorid)
-                        TriggerServerEvent('gs-doorlocks:server:LockpickDoor', data.doorid)
-                    end
+
                 else
-                    UnlockGroup:ShowGroup(_('unlocked_doorlock'))
-
                     if isJob and isChar then
                         enableUnlock = true
                     end
 
-                    if enableLock and DoorlockPrompt:HasCompleted() then
-                        DevPrint('Locking door', data.doorid)
-                        LockAnimation(data.coords)
-                        TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, true)
+                    -- Do not show prompts if UseIsControlJustReleased is enabled
+                    if not Config.UseIsControlJustReleased then
+                        UnlockGroup:ShowGroup(_('unlocked_doorlock'))
+
+                        if enableLock and DoorlockPrompt:HasCompleted() then
+                            DevPrint('Locking door', data.doorid)
+                            LockAnimation(data.coords)
+                            TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, true)
+                        end
+                    else
+                        if enableLock and IsControlJustReleased(0, Config.Keys.lock) then
+                            DevPrint('Locking door', data.doorid)
+                            LockAnimation(data.coords)
+                            TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, true)
+                        end
                     end
                 end
             end
