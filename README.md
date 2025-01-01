@@ -107,7 +107,9 @@ Door.fn.AddChar(characterIdenntifer:int) -- Add a character to existing table
 Door.fn.RemoveChar(characterIdenntifer:int) -- Remove a character from existing table
 
 ```
-  
+
+All updates and changes are updated too all clients in real time (no need to relog)
+
 
 # Events 
 
@@ -120,8 +122,21 @@ AddEventHandler('gs-doorlocks:Ready', function()
 end)
 ```
 
+# Door Isnt Detected?
 
-All updates and changes are updated too all clients in real time (no need to relog)
+Doors are automatically detected by this resource without needing to have it added to some "hash list"
+It just needs to have a propper ID assigned to it inside of the YMAP the door is located in. 
+If it doesnt have an id then you can add one and stream the modified ymap on your server
+
+```
+<Item type="CExtensionDefScriptEntityId">
+  <name>some_model_name</name>
+  .....
+  <Id>needs_an_id_here</Id>
+</Item>
+```
+Once an ID has been defined inside of the ymap and streamed, it will work with this resource.
+
 
 # Dependencies
 While this resource was built around VORP it could be modified for any framework.
