@@ -37,6 +37,10 @@ end
 function UpdateDoor(doorid, param, value)
     if not Doors[doorid] then return end
     
+    if Doors[doorid][param] and Doors[doorid][param] == value then 
+        return -- No need to update if the value is the same
+    end
+
     Doors[doorid][param] = value
 
     MySQL.update('UPDATE `gs_doorlocks` SET `data` = ? WHERE `doorid` = ?', {json.encode(Doors[doorid]), doorid},
