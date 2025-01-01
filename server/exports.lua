@@ -167,7 +167,7 @@ function DoorAPI:DoorsByName(name)
     local found = {}
     for doorid, data in next, Doors do
         if data.name == name then
-            table.insert(found, self:Door(doorid))
+            found[#found+1] = self:Door(doorid)
         end
     end
     return found
