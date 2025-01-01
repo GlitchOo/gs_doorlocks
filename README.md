@@ -30,6 +30,8 @@ Supports single and double doors
 
 [Create Single Door](https://uploads.nbrp.city/projects/gs-doorlocks/CreateSingleDoor.mp4)
 
+[Create Gate(s)](https://uploads.nbrp.city/projects/gs-doorlocks/Gates.mp4)
+
 [Edit Door](https://uploads.nbrp.city/projects/gs-doorlocks/EditDoor.mp4)
 
 [UIPrompt Interactions](https://uploads.nbrp.city/projects/gs-doorlocks/PromptInteraction.mp4)
