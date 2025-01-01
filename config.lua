@@ -47,5 +47,5 @@ Config = {
         lockpick = 0x8CC9CD42, -- x
         edit = 0x760A9C6F, -- G
         cancel = 0x8CC9CD42, -- x
-    }   
+    }
 }
