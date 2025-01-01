@@ -205,7 +205,7 @@ CreateThread(function()
         if ClosestDoor and ClosestDoor.distance <= Config.DoorDistance then
             local data = Doors[ClosestDoor.doorid]
 
-            if data and data.showPrompt and not IsPedDeadOrDying(U.Cache.Ped, false) then
+            if data and data.showPrompt and not IsPedDeadOrDying(U.Cache.Ped, false) and not SelectionActive then
                 sleep = 5
                 local enableLockpick = data.canLockpick and not data.locked
                 local enableLock = not data.locked
