@@ -68,3 +68,35 @@ function RemoveDoor(doorid)
         end
     end)
 end
+
+--- Get class for a door by hash
+--- @param hash number
+--- @return table | nil
+function DoorByHash(hash)
+    for doorid, data in next, Doors do
+        if data.doors then
+            for i = 1, 2 do
+                if data.doors[i].hash == hash then
+                    return DoorAPI:Door(doorid)
+                end
+            end
+        else
+            if data.door.hash == hash then
+                return DoorAPI:Door(doorid)
+            end
+        end
+    end
+end
+
+--- Get class for a door by name
+--- @param name string
+--- @return table | nil | table[]
+function DoorsByName(name)
+    local found = {}
+    for doorid, data in next, Doors do
+        if data.name == name then
+            table.insert(found, DoorAPI:Door(doorid))
+        end
+    end
+    return found
+end

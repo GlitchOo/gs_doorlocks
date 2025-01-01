@@ -163,7 +163,7 @@ end
 --- Get class for a door by name
 --- @param name string
 --- @return table | nil | table[]
-function DoorAPI:DoorByNames(name)
+function DoorAPI.DoorsByName(name)
     local found = {}
     for doorid, data in next, Doors do
         if data.name == name then
@@ -173,6 +173,7 @@ function DoorAPI:DoorByNames(name)
     return found
 end
 
+--- Get Door API
 exports('GetAPI', function()
     return DoorAPI
 end)
