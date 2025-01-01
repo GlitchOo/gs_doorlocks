@@ -111,6 +111,45 @@ function IsDoor(entity)
 	return false
 end
 
+--- comment Calculate the direction of a rotation
+--- @param rotation vector3
+--- @return table
+local function RotationToDirection(rotation)
+	local adjustedRotation = 
+	{ 
+		x = (math.pi / 180) * rotation.x, 
+		y = (math.pi / 180) * rotation.y, 
+		z = (math.pi / 180) * rotation.z 
+	}
+	local direction = 
+	{
+		x = -math.sin(adjustedRotation.z) * math.abs(math.cos(adjustedRotation.x)), 
+		y = math.cos(adjustedRotation.z) * math.abs(math.cos(adjustedRotation.x)), 
+		z = math.sin(adjustedRotation.x)
+	}
+	return direction
+end
+
+--- Raycasts and shapetests from players cam position to "endpoint" to check if the player is at a valid entity
+--- @return boolean
+--- @return integer
+function RayCastGamePlayCamera()
+	local maxDist = 20.0 -- I think 10.0 meters is a good distance
+	
+	local cameraCoord = GetFinalRenderedCamCoord()
+	local direction = RotationToDirection(GetFinalRenderedCamRot(2))
+	local endCoords = {
+        x = cameraCoord.x + direction.x * maxDist,
+        y = cameraCoord.y + direction.y * maxDist,
+        z = cameraCoord.z + direction.z * maxDist
+    }
+
+	local handle = StartShapeTestRay(cameraCoord.x, cameraCoord.y, cameraCoord.z, endCoords.x, endCoords.y, endCoords.z, 511, U.Cache.Ped, 4)
+    local _, hit, _, _, _, entityHit = GetShapeTestResultIncludingMaterial(handle)
+
+	return hit, entityHit
+end
+
 ---Checks if a door is registered
 ---@param entity number
 ---@return number | boolean
@@ -188,51 +227,56 @@ function SelectDoorThread(isDouble)
 			break
 		end
 
-		local retval, entity = GetEntityPlayerIsFreeAimingAt(PlayerId())
+		if IsPlayerFreeAiming(U.Cache.PlayerId) then
 
-		if retval then
-			local model = GetEntityModel(entity)
-			local isDoor = IsDoor(entity)
-			local isRegistered = IsRegisteredDoor(entity)
+			local retval, entity = RayCastGamePlayCamera()
 
-			DevPrint('Entity:', entity, 'Model:', model, 'IsDoor:', isDoor, 'IsRegistered:', isRegistered)
-			
-			if not isDoor and not DoubleDoors[entity] and isRegistered then
-				AddDoorPrompt:EnabledPrompt(true)
+			if retval then
+				local model = GetEntityModel(entity)
+				local isDoor = IsDoor(entity)
+				local isRegistered = IsRegisteredDoor(entity)
 
-				if AddDoorPrompt:HasCompleted() then
-					if not isDouble then
+				DevPrint('Entity:', entity, 'Model:', model, 'IsDoor:', isDoor, 'IsRegistered:', isRegistered)
+				
+				if not isDoor and not DoubleDoors[entity] and isRegistered then
+					AddDoorPrompt:EnabledPrompt(true)
 
-						SelectedDoor = {
-							hash = isRegistered,
-							model = GetEntityModel(entity),
-							coords = GetEntityCoords(entity),
-							heading = GetEntityHeading(entity)
-						}
+					if AddDoorPrompt:HasCompleted() then
+						if not isDouble then
 
-						break
-					else
-						DoubleDoors[entity] = true
+							SelectedDoor = {
+								hash = isRegistered,
+								model = GetEntityModel(entity),
+								coords = GetEntityCoords(entity),
+								heading = GetEntityHeading(entity)
+							}
 
-						SelectedDoor = SelectedDoor or {}
-
-						table.insert(SelectedDoor, {
-							hash = isRegistered,
-							model = GetEntityModel(entity),
-							coords = GetEntityCoords(entity),
-							heading = GetEntityHeading(entity)
-						})
-
-						if #SelectedDoor == 2 then
 							break
+						else
+							DoubleDoors[entity] = true
+
+							SelectedDoor = SelectedDoor or {}
+
+							table.insert(SelectedDoor, {
+								hash = isRegistered,
+								model = GetEntityModel(entity),
+								coords = GetEntityCoords(entity),
+								heading = GetEntityHeading(entity)
+							})
+
+							if #SelectedDoor == 2 then
+								break
+							end
 						end
+						
 					end
-					
+				else
+					AddDoorPrompt:EnabledPrompt(false)
 				end
+
 			else
 				AddDoorPrompt:EnabledPrompt(false)
 			end
-
 		else
 			AddDoorPrompt:EnabledPrompt(false)
 		end
