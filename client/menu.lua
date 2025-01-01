@@ -81,6 +81,9 @@ end
 function OpenLockMenu(fresh, isExport)
     MenuData.CloseAll()
 
+    -- Hide the radar
+    DisplayRadar(false)
+
     if type(fresh) == 'table' then
         Editing = true
         Data = fresh
@@ -291,6 +294,8 @@ function OpenLockMenu(fresh, isExport)
             
         end,function(data, menu)
             menu.close()
+            -- Show the radar again
+            DisplayRadar(true)
         end
     )
 end
