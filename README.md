@@ -65,12 +65,31 @@ GetAPI | Returns the doorlock class containing functions to easily update door l
 local DoorLocks = exports.gs_doorlocks:GetAPI()
 ```
 
-Theres various class functions to update locks
+Example of the API:
 ```
 local DoorLocks = exports.gs_doorlocks:GetAPI()
 
-local Door = DoorLocks:Door(id:int)
+-- Best method to return a door class. Requires no loop overhead
+local Door = DoorLocks:Door(id:int) -- Returns the door class from door id
 
+-- Not ideal but can also return a door by its door hash
+local Door = DoorLocks:DoorByHash(id:int) -- Returns the door class from door hash
+
+-- Never use this method unless you want to update multple doors with the same name (Eg. bank doors, shop doors)
+local Door = DoorLocks:DoorsByName(name:str) -- Returns a table of door classes from the door name
+
+-- With the returned door class you can trigger functions within the class or get the doors data
+
+-- Data Class
+Door.Data.doorid            -- Door ID (number)
+Door.Data.name              -- Door Name (string)
+Door.Data.locked            -- Door lock status (boolean)
+Door.Data.coords            -- Door coords (vec3)
+Door.Data.charAcces         -- Door character access table (table[])
+Door.Data.jobAccess         -- Door job access table (table[])
+Door.Data.canLockpick       -- Door lockpick permission (boolean)
+
+-- Function Class
 Door.fn.SetLock(true|false) -- Lock/Unlock Door
 Door.fn.SetName(name:str) -- Set the locks name
 Door.fn.SetLockOnStart(true|false) -- Enable/Disable automatic lock on startup
