@@ -163,13 +163,25 @@ end
 --- Get class for a door by name
 --- @param name string
 --- @return table | nil | table[]
-function DoorAPI.DoorsByName(name)
+function DoorAPI:DoorsByName(name)
     local found = {}
     for doorid, data in next, Doors do
         if data.name == name then
             table.insert(found, self:Door(doorid))
         end
     end
+    return found
+end
+
+--- Get all doors as classes
+---@return table
+function DoorAPI:AllDoors()
+    local found = {}
+
+    for doorid, _ in next, Doors do
+        found[#found+1] = self:Door(doorid)
+    end
+
     return found
 end
 
