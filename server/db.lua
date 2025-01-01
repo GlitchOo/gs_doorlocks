@@ -23,4 +23,8 @@ CreateThread(function()
     end
 
     DatabaseReady = true
+
+    print('^2[gs-doorlocks]^7 Database ready')
+
+    TriggerEvent('gs-doorlocks:Ready')
 end)
