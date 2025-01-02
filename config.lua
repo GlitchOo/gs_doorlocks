@@ -14,6 +14,29 @@ Config = {
         removeOnFail = true, -- Remove on fail
     },
 
+    AlertJobs = { -- Alert jobs when a door is lockpicked
+        AlertChance = 60, -- Chance to alert law enforcement (0-100) 100 = 100%
+        AlertDistance = 500.0, -- Distance to alert law enforcement
+        Jobs = { -- Jobs to alert
+            'SDPolice',
+            'ValSheriff',
+            'RhoSheriff',
+        },
+        Notification = {
+            title = 'Breakin Attempt',                          -- Notification title
+            message = 'Someone is attempting to open a door',   -- Notification message
+            dict = 'generic_textures',                          -- Notification texture dictionary
+            icon = 'lock',                                      -- Notification icon
+            color = 'COLOR_WHITE',                              -- Notification color
+            duration = 8000,                                    -- Notification duration
+        },
+        Blip = {                                                -- Blip settings
+            hash = -1282792512,                                 -- Blip hash
+            radius = 5,                                         -- Blip radius
+            duration = 60000,                                   -- Blip duration
+        },
+    },
+
 
     UnlockCommand = 'togglelock', -- Command to unlock a door (e.g. /unlock) allows doors to be unlocked when UIPrompt is hidden 
     
@@ -68,6 +91,7 @@ Config = {
         --    itemNameAccess = 'SheriffKeys',     -- Item name to access (false to disable)
         --    canLockpick = true,                 -- Can lockpick
         --    showPrompt = true                   -- Show prompt
+        --    alertLaw = true,                    -- Alert law enforcement
         --},
     }
 }

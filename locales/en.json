@@ -38,6 +38,8 @@
     "locked_on_start_desc": "Should this door be locked on server start?",
     "lockpickable": "Can be lockpicked?",
     "lockpickable_desc": "Can this door be lockpicked?",
+    "alert_law": "Alert Law Enforcement?",
+    "alert_law_desc": "Should law enforcement be alerted when this door is lockpicked?",
     "is_double": "Is double door?",
     "is_double_desc": "Is this door a double door?",
     "show_prompt": "Show prompt?",

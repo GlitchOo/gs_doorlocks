@@ -31,6 +31,7 @@ function InitDoor(doorid, data)
     response.locked = data.lockedOnStart
     response.lockedOnStart = data.lockedOnStart
     response.canLockpick = data.canLockpick
+    response.alertLaw = data.alertLaw
     response.showPrompt = data.showPrompt
 
     return response

@@ -4,6 +4,8 @@ Doors = {}
 DoorEnities = {}
 ClosestDoor = nil
 
+local Blips = {}
+
 -- Setup the UI Prompts for the door system
 local LockGroup = U.Prompts:SetupPromptGroup()
 local UnlockGroup = U.Prompts:SetupPromptGroup()
@@ -90,10 +92,44 @@ RegisterNetEvent('gs-doorlocks:client:EditDoor', function()
         itemNameAccess = data.itemNameAccess,
         lockedOnStart = data.lockedOnStart,
         canLockpick = data.canLockpick,
+        alertLaw = data.alertLaw,
         showPrompt = data.showPrompt
     }
 
     OpenLockMenu(edit)
+end)
+
+---Event triggered when an alert is triggered for law enforcement
+---@param doorid number
+RegisterNetEvent('gs-doorlocks:client:AlertLaw', function(doorid)
+    if not LocalPlayer.state.IsInSession then return end
+    if not Doors[doorid] then return end
+    
+    local data = Doors[doorid]
+    local coords = data.coords
+
+    -- Check if the player is within the alert distance
+    if #(U.Cache.Coords - coords) > Config.AlertJobs.AlertDistance then
+        return
+    end
+
+    -- Check if the player has the required job
+    if not U.table.contains(Config.AlertJobs.Jobs, LocalPlayer.state.Character.Job) then
+        return
+    end
+
+    local notification = Config.AlertJobs.Notification
+    local blip =  Config.AlertJobs.Blip
+
+    -- Notify the player
+    Core.NotifyLeft(notification.title, notification.title, notification.dict, notification.icon, notification.duration, notification.color)
+
+    -- Create a blip for the alert (This will be wiped on resource stop and periodically in a thread below)
+    local rawBlip = BlipAddForRadius(blip.hash, coords.x, coords.y, coords.z, blip.radius)
+    Blips[#Blips+1] = {
+        blip = rawBlip,
+        time = GetGameTimer() + notification.duration
+    }
 end)
 
 ---Event triggered when the open all doors command is executed
@@ -130,9 +166,16 @@ end)
 
 AddEventHandler('onResourceStop', function(resource)
     if resource == GetCurrentResourceName() then
+        --- Clear/Remove doors
         for doorid, door in next, Doors do
             RemoveDoor(doorid)
         end
+
+        --- Clear any blips so they dont get stuck
+        for i = 1, #Blips do
+            RemoveBlip(Blips[i].blip)
+        end
+
     end
 end)
 
@@ -187,6 +230,16 @@ CreateThread(function()
                 if not ClosestDist or dist < ClosestDist then
                     ClosestDist = dist
                     Closest = {doorid = doorid, distance = dist}
+                end
+            end
+        end
+
+        -- Clear blips that have expired
+        if #Blips > 0 then
+            for k, v in next, Blips do
+                if v.time < GetGameTimer() then
+                    RemoveBlip(v.blip)
+                    table.remove(Blips, k)
                 end
             end
         end

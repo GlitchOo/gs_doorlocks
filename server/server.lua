@@ -111,6 +111,7 @@ RegisterNetEvent('gs-doorlocks:server:UpdateDoor', function(data)
     door.itemNameAccess = data.itemNameAccess
     door.lockedOnStart = data.lockedOnStart
     door.canLockpick = data.canLockpick
+    door.alertLaw = data.alertLaw
     door.showPrompt = data.showPrompt
 
     MySQL.update('UPDATE gs_doorlocks SET data = ? WHERE doorid = ?', {json.encode(door), data.doorid},
@@ -213,6 +214,11 @@ RegisterNetEvent('gs-doorlocks:server:LockpickDoor', function(doorid)
 
     if lockpick then
         TriggerClientEvent('gs-doorlocks:client:LockpickDoor', _source, doorid, lockpick.id)
+
+        -- Alert Law Enforcement
+        if door.alertLaw and math.random(1, 100) <= Config.AlertJobs.AlertChance then
+            TriggerClientEvent('gs-doorlocks:client:AlertLaw', -1, doorid)
+        end
     else
         Core.NotifyAvanced(_source, _('no_lockpick'), 'BLIPS', 'blip_proc_home_locked', 'COLOR_RED', 1500)
     end

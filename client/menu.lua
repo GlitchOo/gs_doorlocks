@@ -7,6 +7,7 @@ local Data = {
     itemNameAccess = false,
     lockedOnStart = true,
     canLockpick = false,
+    alertLaw = false,
     isDouble = false,
     showPrompt = true,
     door = {},
@@ -21,6 +22,7 @@ function ResetData()
         itemNameAccess = false,
         lockedOnStart = true,
         canLockpick = false,
+        alertLaw = false,
         isDouble = false,
         showPrompt = true,
         door = {},
@@ -53,6 +55,10 @@ function MainMenuDescription(label)
                 </tr>
                 <tr>
                     <th style='text-align: left;'>%s</th>
+                    <td style='text-align: center;'>%s</td> 
+                </tr>
+                <tr>
+                    <th style='text-align: left;'>%s</th>
                     <td style='text-align: center;'>%s</td>
                 </tr>
                 <tr>
@@ -75,6 +81,7 @@ function MainMenuDescription(label)
         _('door_name'), Data.name, 
         _('locked_on_start'), Data.lockedOnStart and _('yes') or _('no'),
         _('lockpickable'), Data.canLockpick and _('yes') or _('no'),
+        _('alert_law'), Data.alertLaw and _('yes') or _('no'),
         _('show_prompt'), Data.showPrompt and _('yes') or _('no'),
         _('itemNameAccess'), Data.itemNameAccess and Data.itemNameAccess or _('none'),
         _('lockperms'), #Data.charAccess > 0 and table.concat(Data.charAccess, ', ') or _('none'),
@@ -178,6 +185,14 @@ function OpenLockMenu(fresh, isExport)
             descText = _('lockpickable_desc'),
             toggle = true,
             desc = MainMenuDescription(_('lockpickable_desc'))
+        },
+        {
+            labelText = _('alert_law'),
+            label = CustomLabel:format(_('alert_law'), (Data.alertLaw and Check or Uncheck)),
+            value = "alertLaw",
+            descText = _('alert_law_desc'),
+            toggle = true,
+            desc = MainMenuDescription(_('alert_law_desc'))
         },
         {
             labelText = _('show_prompt'),
