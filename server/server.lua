@@ -108,6 +108,7 @@ RegisterNetEvent('gs-doorlocks:server:UpdateDoor', function(data)
     door.name = data.name
     door.jobAccess = data.jobAccess
     door.charAccess = data.charAccess
+    door.itemNameAccess = data.itemNameAccess
     door.lockedOnStart = data.lockedOnStart
     door.canLockpick = data.canLockpick
     door.showPrompt = data.showPrompt
