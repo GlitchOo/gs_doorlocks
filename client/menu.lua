@@ -385,16 +385,16 @@ end
 function JobPerms()
     MenuData.CloseAll()
 
-    local CustomLabel = '%s <span style="float: right; position: relative; right: 5vh; top: 3px; color: red;"><i class="fas fa-trash"></i></span>'
+    local CustomLabel = '%s %s <span style="float: right; position: relative; right: 5vh; top: 3px; color: red;"><i class="fas fa-trash"></i></span>'
 
     local MenuElements = {}
 
     for k, v in next, Data.jobAccess do
         table.insert(MenuElements, {
-            label = CustomLabel:format(v),
+            label = CustomLabel:format(k, v),
             value = 'remove',
             index = k,
-            desc = ('remove_access'):format(v),
+            desc = ('remove_access'):format(k, v),
         })
     end
 
@@ -446,7 +446,17 @@ function JobPerms()
             if data.current.input then
                 local result = exports.vorp_inputs:advancedInput(data.current.input)
                 if result and result ~= '' then
-                    table.insert(Data.jobAccess, result)
+                    local values = {}
+
+                    for val in result:gmatch("%S+") do
+                        table.insert(values, val)
+                    end
+
+                    table.insert(Data.jobAccess, {
+                        name = values[1],
+                        rank = tonumber(values[2]) or 0
+                    })
+
                     JobPerms()
                 end
             end

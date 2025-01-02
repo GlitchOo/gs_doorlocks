@@ -65,8 +65,9 @@ Config = {
         --    charAccess = {                      -- Character access (VORP [characteridentifier])
         --        1, 3, 10
         --    },
+        --    itemNameAccess = 'SheriffKeys',     -- Item name to access (false to disable)
         --    canLockpick = true,                 -- Can lockpick
         --    showPrompt = true                   -- Show prompt
-        --}
+        --},
     }
 }

@@ -20,6 +20,12 @@ function InitDoor(doorid, data)
         response.door = data.door
     end
 
+    -- Make sure job access table is the correct format
+    for name, rank in next, data.jobAccess do
+        data.jobAccess[name] = tonumber(rank) or 0
+    end
+
+    response.itemNameAccess = data.itemNameAccess or false
     response.jobAccess = data.jobAccess
     response.charAccess = data.charAccess
     response.locked = data.lockedOnStart

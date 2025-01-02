@@ -133,6 +133,7 @@ RegisterNetEvent('gs-doorlocks:server:ToggleDoorStatus', function(doorid, status
 
     local Group <const> = User.getGroup
     local Job <const> = Character.job
+    local JobGrade <const> = Character.jobGrade
 
     local door = Doors[doorid]
 
@@ -151,7 +152,7 @@ RegisterNetEvent('gs-doorlocks:server:ToggleDoorStatus', function(doorid, status
         end
     end
 
-    if not CanAccess and #door.jobAccess > 0 and U.table.contains(door.jobAccess, Job) then
+    if not CanAccess and door.jobAccess[Job] and door.jobAccess[Job] <= JobGrade then
         CanAccess = true
         DevPrint('Job Access', Job, 'Door', doorid)
     end

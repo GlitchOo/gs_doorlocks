@@ -211,7 +211,7 @@ CreateThread(function()
                 local enableLock = not data.locked
                 local enableUnlock = data.locked
 
-                local isJob = (#data.jobAccess == 0 and true or U.table.contains(data.jobAccess, LocalPlayer.state.Character.Job))
+                local isJob = (data.jobAccess[LocalPlayer.state.Character.Job] and data.jobAccess[LocalPlayer.state.Character.Job] <= LocalPlayer.state.Character.Grade)
                 local isChar = (#data.charAccess == 0 and true or U.table.contains(data.charAccess, LocalPlayer.state.Character.CharId))
                 
                 if Config.EnableDrawSprite then
