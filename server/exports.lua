@@ -185,6 +185,44 @@ function DoorAPI:AllDoors()
     return found
 end
 
+--- Add a new door
+--- @param door table
+--- @return boolean | number
+function DoorAPI:AddNewDoor(door) 
+    -- Check to see if door exists
+    if door.doors then
+        if self:DoorByHash(door.doors[1].hash) then
+            print('Failed to create new door: Door already exists', door.name)
+            return false
+        end
+
+        if self:DoorByHash(door.doors[2].hash) then
+            print('Failed to create new door: Door already exists', door.name)
+            return false
+        end
+    else
+        if self:DoorByHash(door.door.hash) then
+            print('Failed to create new door: Door already exists', door.name)
+            return false
+        end
+    end
+
+    local insertId = MySQL.insert.await('INSERT INTO `gs_doorlocks` ( `name` ) VALUES ( ? )', { door.name })
+    if insertId then
+        local newDoor = InitDoor(insertId, door)
+        Doors[insertId] = newDoor
+
+        MySQL.update('UPDATE gs_doorlocks SET data = ? WHERE doorid = ?', {json.encode(newDoor), insertId})
+
+        -- Send to clients
+        TriggerClientEvent('gs-doorlocks:client:AddedDoor', -1, newDoor)
+
+        return insertId
+    end
+
+    return false
+end
+
 --- Get Door API
 exports('GetAPI', function()
     return DoorAPI

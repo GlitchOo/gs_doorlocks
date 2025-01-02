@@ -47,9 +47,11 @@ CreateThread(function()
                 transaction[#transaction + 1] = {query = 'UPDATE `gs_doorlocks` SET `data` = ? WHERE `doorid` = ?', values = {json.encode(door), existingDoorId}}
             else
                 -- Insert new door
-                local insertId = MySQL.insert.await('INSERT INTO `gs_doorlocks` ( `name`, `data` ) VALUES ( ?, ? )', { door.name, json.encode(door) })
+                local insertId = MySQL.insert.await('INSERT INTO `gs_doorlocks` ( `name` ) VALUES ( ? )', { door.name })
                 if insertId then
-                    Doors[insertId] = InitDoor(insertId, door)
+                    local newDoor = InitDoor(insertId, door)
+                    Doors[insertId] = newDoor
+                    MySQL.update('UPDATE gs_doorlocks SET data = ? WHERE doorid = ?', {json.encode(newDoor), insertId})
                 end
             end
         end
