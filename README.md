@@ -113,6 +113,72 @@ Door.fn.RemoveChar(characterIdenntifer:int) -- Remove a character from existing 
 All updates and changes are updated too all clients in real time (no need to relog)
 
 
+# Manually Configure Doors (On Startup)
+
+You can manually configure doors via the config file following the format outline below
+Note: Any changes made to the config will override the save innfo about he door to the database (based on the door hash)
+```
+{
+    name = 'Door 1',                    -- Name of the door
+    lockedOnStart = true,               -- Locked on start
+    jobAccess = {                       -- Job access (VORP [name rank])
+        ['ValSheriff '] = 0,
+        ['RhoSheriff  '] = 0,
+    },                                  
+    charAccess = {                      -- Character access (VORP [characteridentifier])
+        1, 3, 10
+    },
+    itemNameAccess = 'SheriffKeys',     -- Item name to access (false to disable)
+    canLockpick = true,                 -- Can lockpick
+    alertLaw = true,                    -- Alert law enforcement
+    showPrompt = true                   -- Show prompt
+    doors = {                           -- Double doors
+        {
+            coords = vector3(0.0, 0.0, 0.0), -- Door 1 coords
+            hash = 0,                        -- Door 1 hash
+            model = 'prop_door',             -- Door 1 model
+        },
+        {
+            coords = vector3(0.0, 0.0, 0.0), -- Door 2 coords
+            hash = 0,                        -- Door 2 hash
+            model = 'prop_door',             -- Door 2 model
+        },
+    },
+    door = {                            -- Single door
+        coords = vector3(0.0, 0.0, 0.0), -- Door coords
+        hash = 0,                        -- Door hash
+        model = 'prop_door',             -- Door model
+    },
+},
+```
+
+You can also add a new door during runtime using the server-side api from other resources using the same format above. 
+
+Example:
+```
+local DoorLocks = exports.gs_doorlocks:GetAPI()
+
+local doorid = DoorLocks:AddNewDoor({
+  {
+      name = 'Doctor Office Front',
+      lockedOnStart = false,
+      jobAccess = {
+          ['ValDoctor'] = 0,
+      },
+      charAccess = {},
+      itemNameAccess = false,
+      canLockpick = false,
+      alertLaw = false,
+      showPrompt = true,
+      door = {
+          coords = vector3(-282.8079528808594, 803.954833984375, 118.39317321777344),
+          hash = 3588026089,
+          model = 'p_door62x',
+      }
+  }
+})
+```
+
 # Events 
 
 
