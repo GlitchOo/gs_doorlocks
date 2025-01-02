@@ -5,7 +5,7 @@ lua54 "yes"
 
 author '_G[S]cripts'
 description 'Easily create and manage doors for RedM'
-version '1.0.3'
+version '1.0.4'
 
 shared_scripts {
   'config.lua',
