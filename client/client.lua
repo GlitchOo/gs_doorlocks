@@ -197,8 +197,6 @@ CreateThread(function()
     end
 end)
 
--- DoorlockPrompt, DoorUnlockPrompt, LockpickPrompt
-
 CreateThread(function()
     -- Setup the UI Prompts for the door system
     while true do
@@ -209,20 +207,12 @@ CreateThread(function()
             if data and data.showPrompt and not IsPedDeadOrDying(U.Cache.Ped, false) and not SelectionActive then
                 sleep = 5
                 local enableLockpick = data.canLockpick and not data.locked
-                local enableLock = not data.locked
-                local enableUnlock = data.locked
-
-                local isJob = (data.jobAccess[LocalPlayer.state.Character.Job] and data.jobAccess[LocalPlayer.state.Character.Job] <= LocalPlayer.state.Character.Grade)
-                local isChar = (#data.charAccess == 0 and true or U.table.contains(data.charAccess, LocalPlayer.state.Character.CharId))
                 
                 if Config.EnableDrawSprite then
                     DrawLock(data.center, data.locked)
                 end
 
                 if data.locked then
-                    if isJob and isChar then
-                        enableLock = true
-                    end
 
                     if data.canLockpick then
                         enableLockpick = true
@@ -230,57 +220,29 @@ CreateThread(function()
                     
                     -- Do not show prompts if UseIsControlJustReleased is enabled
                     if not Config.UseIsControlJustReleased then
-
                         LockGroup:ShowGroup(_('locked_doorlock'))
-                        DoorlockPrompt:EnabledPrompt(enableLock)
                         LockpickPrompt:EnabledPrompt(enableLockpick)
+                    end
 
-                        DoorUnlockPrompt:EnabledPrompt(enableUnlock)
-
-                        if enableUnlock and DoorUnlockPrompt:HasCompleted() then
-                            DevPrint('Unlocking door', data.doorid)
-                            LockAnimation(data.coords)
-                            TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, false)
-                        end
-                        
-                        if enableLockpick and LockpickPrompt:HasCompleted() then
-                            DevPrint('Lockpicking door', data.doorid)
-                            TriggerServerEvent('gs-doorlocks:server:LockpickDoor', data.doorid)
-                        end
-
-                    else
-                        if enableUnlock and IsControlJustReleased(0, Config.Keys.lock) then
-                            DevPrint('Unlocking door', data.doorid)
-                            LockAnimation(data.coords)
-                            TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, false)
-                        end
-
-                        if enableLockpick and IsControlJustReleased(0, Config.Keys.lockpick) then
-                            DevPrint('Lockpicking door', data.doorid)
-                            TriggerServerEvent('gs-doorlocks:server:LockpickDoor', data.doorid)
-                        end
+                    if IsControlJustReleased(0, Config.Keys.lock) or DoorUnlockPrompt:HasCompleted()  then
+                        DevPrint('Unlocking door', data.doorid)
+                        LockAnimation(data.coords)
+                        TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, false)
+                    elseif enableLockpick and (IsControlJustReleased(0, Config.Keys.lockpick) or LockpickPrompt:HasCompleted()) then
+                        DevPrint('Lockpicking door', data.doorid)
+                        TriggerServerEvent('gs-doorlocks:server:LockpickDoor', data.doorid)
                     end
 
                 else
-                    if isJob and isChar then
-                        enableUnlock = true
-                    end
-
                     -- Do not show prompts if UseIsControlJustReleased is enabled
                     if not Config.UseIsControlJustReleased then
                         UnlockGroup:ShowGroup(_('unlocked_doorlock'))
+                    end
 
-                        if enableLock and DoorlockPrompt:HasCompleted() then
-                            DevPrint('Locking door', data.doorid)
-                            LockAnimation(data.coords)
-                            TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, true)
-                        end
-                    else
-                        if enableLock and IsControlJustReleased(0, Config.Keys.lock) then
-                            DevPrint('Locking door', data.doorid)
-                            LockAnimation(data.coords)
-                            TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, true)
-                        end
+                    if IsControlJustReleased(0, Config.Keys.lock) or DoorlockPrompt:HasCompleted() then
+                        DevPrint('Locking door', data.doorid)
+                        LockAnimation(data.coords)
+                        TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, true)
                     end
                 end
             end
