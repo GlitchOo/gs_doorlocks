@@ -150,7 +150,7 @@ RegisterNetEvent('gs-doorlocks:client:LockpickDoor', function(doorid, itemId)
                     TriggerServerEvent('gs-doorlocks:server:ToggleDoorStatus', data.doorid, false, itemId)
                 else
                     if Config.Lockpick.removeOnFail then
-                        TriggerServerEvent('gs-inventory:server:RemoveItem', itemId)
+                        TriggerServerEvent('gs-doorlocks:server:RemoveItem', itemId)
                     end
                     Core.NotifyAvanced(_('lockpick_fail'), 'BLIPS', 'blip_proc_home_locked', 'COLOR_RED', 1500)
                 end
