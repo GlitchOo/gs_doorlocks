@@ -74,13 +74,11 @@ Config = {
 
     -- Manually add / configure doors here (Will update records in the database on server start)
     -- Note: It will NOT delete doors. You can do that manually in game using the /editdoor command
+    -- Note: You can also add doors in game using the /createdoor command
     Doors = {
         --{
         --    name = 'Door 1',                    -- Name of the door
-        --    doorhash = 746387265,               -- Door hash (id)
-        --    coords = vector3(0.0, 0.0, 0.0),    -- Door coords
-        --    model = 'prop_door_01',             -- Door model
-        --    locked = true,                      -- Locked on start
+        --    lockedOnStart = true,               -- Locked on start
         --    jobAccess = {                       -- Job access (VORP [name rank])
         --        ['ValSheriff '] = 0,
         --        ['RhoSheriff  '] = 0,
@@ -90,8 +88,25 @@ Config = {
         --    },
         --    itemNameAccess = 'SheriffKeys',     -- Item name to access (false to disable)
         --    canLockpick = true,                 -- Can lockpick
-        --    showPrompt = true                   -- Show prompt
         --    alertLaw = true,                    -- Alert law enforcement
+        --    showPrompt = true                   -- Show prompt
+        --    doors = {                           -- Double doors
+        --        {
+        --            coords = vector3(0.0, 0.0, 0.0), -- Door 1 coords
+        --            hash = 0,                        -- Door 1 hash
+        --            model = 'prop_door',             -- Door 1 model
+        --        },
+        --        {
+        --            coords = vector3(0.0, 0.0, 0.0), -- Door 2 coords
+        --            hash = 0,                        -- Door 2 hash
+        --            model = 'prop_door',             -- Door 2 model
+        --        },
+        --    },
+        --   door = {                            -- Single door
+        --        coords = vector3(0.0, 0.0, 0.0), -- Door coords
+        --        hash = 0,                        -- Door hash
+        --        model = 'prop_door',             -- Door model
+        --    },
         --},
     }
 }
