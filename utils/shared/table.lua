@@ -37,6 +37,26 @@ local function indexof(tbl, val)
     return false
 end
 
+---Concatenates a k:v table into a string
+---@param tbl table
+---@param kDelim string
+---@param vDelim string
+---@return string
+local function kvconcat(tbl, kDelim, vDelim)
+    local str = ''
+
+    for k, v in next, tbl do
+        if str ~= '' then
+            str = str .. kDelim .. k .. vDelim .. v
+        else
+            str = k .. vDelim .. v
+        end
+    end
+
+    return str
+end
+
 table.contains = contains
 table.indexof = indexof
+table.kvconcat = kvconcat
 
