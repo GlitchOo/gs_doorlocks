@@ -141,7 +141,7 @@ function OpenLockMenu(fresh, isExport)
                 attributes = {
                     type = "text",
                     inputHeader = _('itemNameAccess'),
-                    value = Data.itemNameAccess,
+                    value = Data.itemNameAccess or '',
                     pattern = ".*",
                     style = "border-radius: 10px; background-color: ; border:none;"
                 }
