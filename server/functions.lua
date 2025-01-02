@@ -84,15 +84,17 @@ function DoorByHash(hash)
         if data.doors then
             for i = 1, 2 do
                 if data.doors[i].hash == hash then
-                    return DoorAPI:Door(doorid)
+                    return doorid
                 end
             end
         else
             if data.door.hash == hash then
-                return DoorAPI:Door(doorid)
+                return doorid
             end
         end
     end
+
+    return nil
 end
 
 --- Get class for a door by name
@@ -102,7 +104,7 @@ function DoorsByName(name)
     local found = {}
     for doorid, data in next, Doors do
         if data.name == name then
-            table.insert(found, DoorAPI:Door(doorid))
+            table.insert(found, doorid)
         end
     end
     return found
