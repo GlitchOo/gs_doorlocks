@@ -87,6 +87,7 @@ RegisterNetEvent('gs-doorlocks:client:EditDoor', function()
         name = data.name,
         jobAccess = data.jobAccess,
         charAccess = data.charAccess,
+        itemNameAccess = data.itemNameAccess,
         lockedOnStart = data.lockedOnStart,
         canLockpick = data.canLockpick,
         showPrompt = data.showPrompt
