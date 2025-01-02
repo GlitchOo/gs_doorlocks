@@ -8,9 +8,11 @@ Supports single and double doors
 # Commands
 /createdoor - Create a new door
   - Create single & double doors
-  - Control what jobs can access the lock
+  - Control what jobs and rank can access the lock
   - Control what characters via their characterIdentifier can access the lock
+  - control what item is required to access the lock
   - Name your locks with custom names (which can be be used to grab locks via api)
+  - Enable/Disable police notification when door is lockpicked
   - Enable/Disable the UIPrompt for the lock (You can use the /togglelock command to still toggle the door lock)
   - Enable/Disable whether or not the door is locked automatically on startup
   - Enable/Disable whether or not the lock can be lockpicked (with item configured)
@@ -19,9 +21,11 @@ Supports single and double doors
   - Change the door's name
   - Edit job permissions
   - Edit character permissions
+  - Change item requirement
   - Enable/Disable the UIPrompt for the lock (You can use the /togglelock command to still toggle the door lock)
   - Enable/Disable whether or not the door is locked automatically on startup
   - Enable/Disable whether or not the lock can be lockpicked (with item configured)
+  - Enable/Disable police notification when door is lockpicked
   - Delete the door
 
 /togglelock - Toggle the closest doorlock (This will allow you to open doors with hidden UIPrompts)
