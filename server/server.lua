@@ -152,6 +152,13 @@ RegisterNetEvent('gs-doorlocks:server:ToggleDoorStatus', function(doorid, status
         end
     end
 
+    if not CanAccess and door.itemNameAccess then
+        if exports.vorp_inventory:getItemByName(_source, door.itemNameAccess) then
+            CanAccess = true
+            DevPrint('Item Access', door.itemNameAccess, 'Door', doorid)
+        end
+    end
+
     if not CanAccess and door.jobAccess[Job] and door.jobAccess[Job] <= JobGrade then
         CanAccess = true
         DevPrint('Job Access', Job, 'Door', doorid)

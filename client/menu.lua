@@ -4,6 +4,7 @@ local Data = {
     name = 'Door',
     charAccess = {},
     jobAccess = {},
+    itemNameAccess = false,
     lockedOnStart = true,
     canLockpick = false,
     isDouble = false,
@@ -17,6 +18,7 @@ function ResetData()
         name = 'Door',
         charAccess = {},
         jobAccess = {},
+        itemNameAccess = false,
         lockedOnStart = true,
         canLockpick = false,
         isDouble = false,
@@ -61,6 +63,10 @@ function MainMenuDescription(label)
                     <th style='text-align: left;'>%s</th>
                     <td style='text-align: center;'>%s</td>
                 </tr>
+                <tr>
+                    <th style='text-align: left;'>%s</th>
+                    <td style='text-align: center;'>%s</td>
+                </tr>
             </table>
         </div>
     ]]):format(
@@ -70,6 +76,7 @@ function MainMenuDescription(label)
         _('locked_on_start'), Data.lockedOnStart and _('yes') or _('no'),
         _('lockpickable'), Data.canLockpick and _('yes') or _('no'),
         _('show_prompt'), Data.showPrompt and _('yes') or _('no'),
+        _('itemNameAccess'), Data.itemNameAccess and Data.itemNameAccess or _('none'),
         _('lockperms'), #Data.charAccess > 0 and table.concat(Data.charAccess, ', ') or _('none'),
         _('job_lockperms'), #Data.jobAccess > 0 and table.concat(Data.jobAccess, ', ') or _('none')
     )
@@ -115,6 +122,26 @@ function OpenLockMenu(fresh, isExport)
                     type = "text",
                     inputHeader = _('door_name_desc'),
                     value = Data.name,
+                    pattern = ".*",
+                    style = "border-radius: 10px; background-color: ; border:none;"
+                }
+            }
+        },
+        {
+            labelText = _('itemNameAccess'),
+            label = _('itemNameAccess'),
+            value = "itemNameAccess",
+            descText = _('itemNameAccess_desc'),
+            desc = MainMenuDescription(_('itemNameAccess_desc')),
+            input = {
+                type = "enableinput",
+                inputType = "input",
+                button = _('confirm'),
+                style = "block",
+                attributes = {
+                    type = "text",
+                    inputHeader = _('itemNameAccess'),
+                    value = Data.itemNameAccess,
                     pattern = ".*",
                     style = "border-radius: 10px; background-color: ; border:none;"
                 }
