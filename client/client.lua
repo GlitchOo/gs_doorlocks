@@ -126,9 +126,10 @@ RegisterNetEvent('gs-doorlocks:client:AlertLaw', function(doorid)
 
     -- Create a blip for the alert (This will be wiped on resource stop and periodically in a thread below)
     local rawBlip = BlipAddForRadius(blip.hash, coords.x, coords.y, coords.z, blip.radius)
+    SetBlipName(rawBlip, notification.title)
     Blips[#Blips+1] = {
         blip = rawBlip,
-        time = GetGameTimer() + notification.duration
+        time = GetGameTimer() + blip.duration
     }
 end)
 

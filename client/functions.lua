@@ -49,6 +49,18 @@ function LockAnimation(coords)
 	SetModelAsNoLongerNeeded(model)
 end
 
+--- Draw a blip on the map for a certain radius
+--- https://rdr3natives.com/?_0x45F13B7E0A15C880
+--- @param blipHash number
+--- @param x number
+--- @param y number
+--- @param z number
+--- @param radius number
+--- @return number
+function BlipAddForRadius(blipHash, x, y, z, radius)
+	return Citizen.InvokeNative(0x45f13b7e0a15c880, blipHash, x, y, z, radius)
+end
+
 --- Draw a sprite on the screen
 --- @param coords vector3
 --- @param locked boolean
