@@ -22,6 +22,42 @@ CreateThread(function()
         Doors[row.doorid] = InitDoor(row.doorid, data)
     end
 
+    -- Import doors from config
+    if Config.Doors and #Config.Doors > 0 then
+        local transaction = {}
+
+        for i = 1, #Config.Doors do
+            local door = Config.Doors[i]
+            local existingDoorId = nil
+            
+            -- Check to see if door exists
+            if door.doors then
+                for i = 1, 2 do
+                    existingDoorId = DoorByHash(door.doors[i].hash)
+                    if existingDoorId then break end
+                end
+            else
+                existingDoorId = DoorByHash(door.door.hash)
+            end
+
+            if existingDoorId then
+                -- Update existing door
+                Doors[existingDoorId] = InitDoor(existingDoorId, door)
+                -- Add to transaction table
+                transaction[#transaction + 1] = {query = 'UPDATE `gs_doorlocks` SET `data` = ? WHERE `doorid` = ?', values = {json.encode(door), existingDoorId}}
+            else
+                -- Insert new door
+                local insertId = MySQL.insert.await('INSERT INTO `gs_doorlocks` ( `name`, `data` ) VALUES ( ?, ? )', { door.name, json.encode(door) })
+                if insertId then
+                    Doors[insertId] = InitDoor(insertId, door)
+                end
+            end
+        end
+
+        -- Update all doors in one transaction
+        MySQL.transaction.await(transaction)
+    end
+
     DatabaseReady = true
 
     print('^2[gs-doorlocks]^7 Database ready')

@@ -78,7 +78,7 @@ end
 
 --- Get class for a door by hash
 --- @param hash number
---- @return table | nil
+--- @return number | nil
 function DoorByHash(hash)
     for doorid, data in next, Doors do
         if data.doors then
