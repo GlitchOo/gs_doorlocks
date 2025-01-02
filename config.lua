@@ -47,5 +47,26 @@ Config = {
         lockpick = 0x8CC9CD42, -- x
         edit = 0x760A9C6F, -- G
         cancel = 0x8CC9CD42, -- x
+    },
+
+    -- Manually add / configure doors here (Will update records in the database on server start)
+    -- Note: It will NOT delete doors. You can do that manually in game using the /editdoor command
+    Doors = {
+        --{
+        --    name = 'Door 1',                    -- Name of the door
+        --    doorhash = 746387265,               -- Door hash (id)
+        --    coords = vector3(0.0, 0.0, 0.0),    -- Door coords
+        --    model = 'prop_door_01',             -- Door model
+        --    locked = true,                      -- Locked on start
+        --    jobAccess = {                       -- Job access (VORP [name rank])
+        --        ['ValSheriff '] = 0,
+        --        ['RhoSheriff  '] = 0,
+        --    },                                  
+        --    charAccess = {                      -- Character access (VORP [characteridentifier])
+        --        1, 3, 10
+        --    },
+        --    canLockpick = true,                 -- Can lockpick
+        --    showPrompt = true                   -- Show prompt
+        --}
     }
 }
