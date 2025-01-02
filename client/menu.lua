@@ -78,7 +78,7 @@ function MainMenuDescription(label)
         _('show_prompt'), Data.showPrompt and _('yes') or _('no'),
         _('itemNameAccess'), Data.itemNameAccess and Data.itemNameAccess or _('none'),
         _('lockperms'), #Data.charAccess > 0 and table.concat(Data.charAccess, ', ') or _('none'),
-        _('job_lockperms'), next(Data.jobAccess) and U.table.kvconcat(Data.jobAccess, ', ', '|') or _('none')
+        _('job_lockperms'), next(Data.jobAccess) and U.table.kvconcat(Data.jobAccess, ', ', ' | ') or _('none')
     )
 end
 
