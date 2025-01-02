@@ -268,7 +268,11 @@ function OpenLockMenu(fresh, isExport)
             -- Input Values 
             if data.current.input then
                 local result = exports.vorp_inputs:advancedInput(data.current.input)
-                if result and result ~= '' then
+                if result and (result ~= '' or data.current.value == 'itemNameAccess') then
+
+                    if data.current.value == 'itemNameAccess' and result == '' then
+                        result = false
+                    end
 
                     Data[data.current.value] = result
 
