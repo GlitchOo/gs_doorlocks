@@ -179,7 +179,9 @@ RegisterNetEvent('gs-doorlocks:server:ToggleDoorStatus', function(doorid, status
         end
     end
 
-    if not CanAccess then return end
+    if not CanAccess then 
+        return Core.NotifyAvanced(_source, _('no_perms'), 'BLIPS', 'blip_proc_home_locked', 'COLOR_RED', 1500)
+    end
 
     UpdateDoor(doorid, 'locked', status)
 
