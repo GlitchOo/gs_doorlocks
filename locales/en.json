@@ -28,7 +28,9 @@
     "door_name_desc": "Set the name of this door",
     "permission": "Character ID",
     "permission_desc": "Character ID's that have permission to lock/unlock this door",
+    "job_label": "Name: %s Rank: %s",
     "job_permission": "Job Name",
+    "job_permission_input": "Job Name Job Rank (Eg. police 0)",
     "job_permission_desc": "Job names that have permission to lock/unlock this door",  
     "itemNameAccess": "Item Name",
     "itemNameAccess_desc": "Item name that gives permission to lock/unlock this door", 
@@ -61,5 +63,6 @@
     "yes": "Yes",
     "no": "No",
     "confirm": "Confirm",
-    "remove_access": "Remove job: %s rank: %s from the door access list"
+    "remove_access": "Remove %s from the door access list",
+    "remove_access_job": "Remove job: %s rank: %s from the door access list"
 }

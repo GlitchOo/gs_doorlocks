@@ -340,7 +340,7 @@ function Perms()
             label = CustomLabel:format(v),
             value = 'remove',
             index = k,
-            desc = ('remove_access'):format(v),
+            desc = _('remove_access', v),
         })
     end
 
@@ -412,16 +412,16 @@ end
 function JobPerms()
     MenuData.CloseAll()
 
-    local CustomLabel = '%s %s <span style="float: right; position: relative; right: 5vh; top: 3px; color: red;"><i class="fas fa-trash"></i></span>'
+    local CustomLabel = '%s <span style="float: right; position: relative; right: 5vh; top: 3px; color: red;"><i class="fas fa-trash"></i></span>'
 
     local MenuElements = {}
 
     for k, v in next, Data.jobAccess do
         table.insert(MenuElements, {
-            label = CustomLabel:format(k, v),
+            label = CustomLabel:format(_('job_label', k, v)),
             value = 'remove',
             index = k,
-            desc = ('remove_access'):format(k, v),
+            desc = _('remove_access_job', k, v),
         })
     end
 
@@ -437,7 +437,7 @@ function JobPerms()
             style = "block",
             attributes = {
                 type = "text",
-                inputHeader = _('job_permission'),
+                inputHeader = _('job_permission_input'),
                 pattern = ".*",
                 style = "border-radius: 10px; background-color: ; border:none;"
             }
@@ -479,17 +479,14 @@ function JobPerms()
                         table.insert(values, val)
                     end
 
-                    table.insert(Data.jobAccess, {
-                        name = values[1],
-                        rank = tonumber(values[2]) or 0
-                    })
+                    Data.jobAccess[values[1]] = tonumber(values[2]) or 0
 
                     JobPerms()
                 end
             end
 
             if data.current.value == 'remove' then
-                table.remove(Data.jobAccess, data.current.index)
+                Data.jobAccess[data.current.index] = nil
                 JobPerms()
             end
             

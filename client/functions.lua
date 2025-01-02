@@ -53,6 +53,7 @@ end
 --- @param coords vector3
 --- @param locked boolean
 function DrawLock(coords, locked)
+	if not coords then return end
 	local onScreen, screenX, screenY = GetScreenCoordFromWorldCoord(coords.x, coords.y, coords.z)
 
 	if not onScreen then return end
