@@ -133,6 +133,20 @@ function DoorAPI:Door(doorid)
         UpdateDoor(self.Data.doorid, 'showPrompt', self.Data.showPrompt)
     end
 
+    --- Update the door data
+    --- @param data table
+    function self.fn.Update(data)
+        self.Data.name = data.name or self.Data.name
+        self.Data.locked = (data.locked == nil and self.Data.locked or data.locked)
+        self.Data.coords = data.coords or self.Data.coords
+        self.Data.charAccess = ((not data.charAccess or type(data.charAccess) ~= 'table') and self.Data.charAccess or data.charAccess)
+        self.Data.jobAccess = ((not data.jobAccess or type(data.jobAccess) ~= 'table') and self.Data.jobAccess or data.jobAccess)
+        self.Data.lockedOnStart = (data.lockedOnStart == nil and self.Data.lockedOnStart or data.lockedOnStart)
+        self.Data.canLockpick = (data.canLockpick == nil and self.Data.canLockpick or data.canLockpick)
+
+        BulkUpdateDoor(self.Data.doorid, self.Data)
+    end
+
     --- Set if the door should show a prompt
     function self.fn.Delete()
         RemoveDoor(self.Data.doorid)

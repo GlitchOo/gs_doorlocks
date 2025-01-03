@@ -62,6 +62,28 @@ function UpdateDoor(doorid, param, value)
     end
 end
 
+---Updates the iinfo about a door and sends the updated info to clients
+---@param doorid number
+---@param data table
+function BulkUpdateDoor(doorid, data)
+    if not Doors[doorid] then return end
+
+    Doors[doorid].name = data.name
+    Doors[doorid].locked = data.locked
+    Doors[doorid].coords = data.coords
+    Doors[doorid].charAccess = data.charAccess
+    Doors[doorid].jobAccess = data.jobAccess
+    Doors[doorid].lockedOnStart = data.lockedOnStart
+    Doors[doorid].canLockpick = data.canLockpick
+
+    MySQL.update('UPDATE `gs_doorlocks` SET `data` = ? WHERE `doorid` = ?', {json.encode(data), doorid},
+    function(records)
+        if records > 0 then
+            TriggerClientEvent('gs-doorlocks:client:UpdatedDoor', -1, Doors[doorid])
+        end
+    end)
+end
+
 --- Deletes a door from the database and sends the info to clients
 ---@param doorid number
 function RemoveDoor(doorid)
