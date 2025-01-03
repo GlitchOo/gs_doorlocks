@@ -201,23 +201,22 @@ end
 
 --- Add a new door
 --- @param door table
---- @return boolean | number
+--- @return boolean, table | nil
 function DoorAPI:AddNewDoor(door) 
     -- Check to see if door exists
     if door.doors then
-        if self:DoorByHash(door.doors[1].hash) then
-            print('Failed to create new door: Door already exists', door.name)
-            return false
-        end
-
-        if self:DoorByHash(door.doors[2].hash) then
-            print('Failed to create new door: Door already exists', door.name)
-            return false
+        for i = 1, 2 do
+            local foundDoor = self:DoorByHash(door.doors[i].hash)
+            if foundDoor then
+                print('Failed to create new door: Door already exists', door.name)
+                return false, foundDoor -- Return the door id of the existing door
+            end
         end
     else
-        if self:DoorByHash(door.door.hash) then
+        local foundDoor = self:DoorByHash(door.door.hash)
+        if foundDoor then
             print('Failed to create new door: Door already exists', door.name)
-            return false
+            return false, foundDoor -- Return the door id of the existing door 
         end
     end
 
@@ -231,10 +230,10 @@ function DoorAPI:AddNewDoor(door)
         -- Send to clients
         TriggerClientEvent('gs-doorlocks:client:AddedDoor', -1, newDoor)
 
-        return insertId
+        return true, self:Door(insertId)
     end
 
-    return false
+    return false, nil
 end
 
 --- Get Door API
