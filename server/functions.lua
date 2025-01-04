@@ -76,7 +76,7 @@ function BulkUpdateDoor(doorid, data)
     Doors[doorid].lockedOnStart = data.lockedOnStart
     Doors[doorid].canLockpick = data.canLockpick
 
-    MySQL.update('UPDATE `gs_doorlocks` SET `data` = ? WHERE `doorid` = ?', {json.encode(data), doorid},
+    MySQL.update('UPDATE `gs_doorlocks` SET `data` = ? WHERE `doorid` = ?', {json.encode(Doors[doorid]), doorid},
     function(records)
         if records > 0 then
             TriggerClientEvent('gs-doorlocks:client:UpdatedDoor', -1, Doors[doorid])
