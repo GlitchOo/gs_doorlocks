@@ -58,6 +58,8 @@ RegisterNetEvent('gs-doorlocks:client:UpdatedDoor', function(data)
     if not LocalPlayer.state.IsInSession then return end
 
     Doors[data.doorid] = data
+    
+    UpdateDoorState(data.doorid)
 end)
 
 ---Event triggered when a door is removed
