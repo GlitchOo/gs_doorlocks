@@ -114,6 +114,54 @@ Door.fn.RemoveChar(characterIdenntifer:int) -- Remove a character from existing 
 
 ```
 
+## Add Doors (Server Side)
+
+```
+local DoorLocks = exports.gs_doorlocks:GetAPI()
+
+local doorid = DoorLocks:AddNewDoor({
+  {
+      name = 'Doctor Office Front',
+      lockedOnStart = false,
+      jobAccess = {
+          ['ValDoctor'] = 0,
+      },
+      charAccess = {},
+      itemNameAccess = false,
+      canLockpick = false,
+      alertLaw = false,
+      showPrompt = true,
+      door = {
+          coords = vector3(-282.8079528808594, 803.954833984375, 118.39317321777344),
+          hash = 3588026089,
+          model = 'p_door62x',
+      }
+  }
+})
+```
+
+## Update Doors (Server Side)
+
+```
+local DoorLocks = exports.gs_doorlocks:GetAPI()
+
+local Door = DoorLocks:Door(10)
+
+if Door then
+    All values are optional, it will default to the settings already in place for the door
+    Door.fn.Update({
+        name = 'Door' -- (OPTIONAL)
+        locked = true -- (OPTIONAL)
+        coords = vec3(0, 0, 0) -- (OPTIONAL)
+        charAccess = {} -- (OPTIONAL)
+        jobAccess = {} -- (OPTIONAL)
+        lockedOnStart = true -- (OPTIONAL)
+        canLockpick = true -- (OPTIONAL)
+        showPrompt = true -- (OPTIONAL)
+    })
+end
+```
+
 All updates and changes are updated too all clients in real time (no need to relog)
 
 
@@ -156,32 +204,6 @@ Note: Any changes made to the config will override the save innfo about he door 
 },
 ```
 
-You can also add a new door during runtime using the server-side api from other resources using the same format above. 
-
-Example:
-```
-local DoorLocks = exports.gs_doorlocks:GetAPI()
-
-local doorid = DoorLocks:AddNewDoor({
-  {
-      name = 'Doctor Office Front',
-      lockedOnStart = false,
-      jobAccess = {
-          ['ValDoctor'] = 0,
-      },
-      charAccess = {},
-      itemNameAccess = false,
-      canLockpick = false,
-      alertLaw = false,
-      showPrompt = true,
-      door = {
-          coords = vector3(-282.8079528808594, 803.954833984375, 118.39317321777344),
-          hash = 3588026089,
-          model = 'p_door62x',
-      }
-  }
-})
-```
 
 # Events 
 
