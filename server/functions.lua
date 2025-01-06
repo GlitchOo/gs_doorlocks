@@ -75,6 +75,7 @@ function BulkUpdateDoor(doorid, data)
     Doors[doorid].jobAccess = data.jobAccess
     Doors[doorid].lockedOnStart = data.lockedOnStart
     Doors[doorid].canLockpick = data.canLockpick
+    Doors[doorid].showPrompt = data.showPrompt
 
     MySQL.update('UPDATE `gs_doorlocks` SET `data` = ? WHERE `doorid` = ?', {json.encode(Doors[doorid]), doorid},
     function(records)

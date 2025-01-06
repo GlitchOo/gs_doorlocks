@@ -20,6 +20,7 @@ function DoorAPI:Door(doorid)
     self.Data.jobAccess = doorData.jobAccess
     self.Data.lockedOnStart = doorData.lockedOnStart
     self.Data.canLockpick = doorData.canLockpick
+    self.Data.showPrompt = doorData.showPrompt
 
 
     --- Set the door to locked or unlocked
@@ -143,6 +144,7 @@ function DoorAPI:Door(doorid)
         self.Data.jobAccess = ((not data.jobAccess or type(data.jobAccess) ~= 'table') and self.Data.jobAccess or data.jobAccess)
         self.Data.lockedOnStart = (data.lockedOnStart == nil and self.Data.lockedOnStart or data.lockedOnStart)
         self.Data.canLockpick = (data.canLockpick == nil and self.Data.canLockpick or data.canLockpick)
+        self.Data.showPrompt = (data.showPrompt == nil and self.Data.showPrompt or data.showPrompt)
 
         BulkUpdateDoor(self.Data.doorid, self.Data)
     end
